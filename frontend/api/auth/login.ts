@@ -38,25 +38,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    // Obtener información del usuario desde la tabla user_profiles
-    const { data: profile, error: profileError } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('user_id', authData.user.id)
-      .single();
-
-    if (profileError) {
-      return res.status(500).json({ error: 'Error al obtener perfil de usuario' });
-    }
-
+    // Usar datos directamente de auth.users con metadata
+    const user = authData.user;
+    const userMeta = user.user_metadata || {};
+    
     res.status(200).json({
       token: authData.session.access_token,
       user: {
-        id: authData.user.id,
-        email: authData.user.email,
-        role: profile.role,
-        first_name: profile.first_name,
-        last_name: profile.last_name,
+        id: user.id,
+        email: user.email,
+        role: userMeta.role || 'admin', // Default role
+        first_name: userMeta.first_name || 'Administrador',
+        last_name: userMeta.last_name || 'La Colmena',
       },
     });
 

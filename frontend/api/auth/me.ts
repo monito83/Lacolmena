@@ -35,23 +35,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(401).json({ error: 'Token inválido' });
     }
 
-    // Obtener información del perfil
-    const { data: profile, error: profileError } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('user_id', user.id)
-      .single();
-
-    if (profileError) {
-      return res.status(500).json({ error: 'Error al obtener perfil' });
-    }
-
+    // Usar datos directamente de auth.users con metadata
+    const userMeta = user.user_metadata || {};
+    
     res.status(200).json({
       id: user.id,
       email: user.email,
-      role: profile.role,
-      first_name: profile.first_name,
-      last_name: profile.last_name,
+      role: userMeta.role || 'admin', // Default role
+      first_name: userMeta.first_name || 'Administrador',
+      last_name: userMeta.last_name || 'La Colmena',
     });
 
   } catch (error) {
