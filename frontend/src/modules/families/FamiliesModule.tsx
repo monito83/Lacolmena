@@ -103,10 +103,6 @@ const FamiliesModule: React.FC = () => {
     return isActive ? 'Activa' : 'Inactiva';
   };
 
-  const formatDate = (_dateString: string) => {
-    return new Date(_dateString).toLocaleDateString('es-AR');
-  };
-
   const getTotalStudents = (_family: Family) => {
     // Por ahora retornamos 0, se implementará cuando tengamos la relación con estudiantes
     return 0;
