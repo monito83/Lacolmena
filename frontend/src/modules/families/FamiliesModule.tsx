@@ -26,6 +26,13 @@ interface Family {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  students?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    grade?: string;
+    is_active: boolean;
+  }[];
 }
 
 const FamiliesModule: React.FC = () => {
@@ -104,9 +111,9 @@ const FamiliesModule: React.FC = () => {
     return isActive ? 'Activa' : 'Inactiva';
   };
 
-  const getTotalStudents = (_family: Family) => {
-    // Por ahora retornamos 0, se implementará cuando tengamos la relación con estudiantes
-    return 0;
+  const getTotalStudents = (family: Family) => {
+    // Contar estudiantes activos de la familia
+    return family.students ? family.students.filter(student => student.is_active).length : 0;
   };
 
   const getTotalCommitments = (_family: Family) => {
