@@ -12,6 +12,7 @@
     "stop": "echo 'Para detener el servidor, presiona Ctrl+C en la terminal donde está corriendo'"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.75.0",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.1.14",
     "@tailwindcss/typography": "^0.5.19",
