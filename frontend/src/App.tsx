@@ -11,6 +11,7 @@ import AcademicModule from './modules/academic/AcademicModule';
 import FinancialModule from './modules/financial/FinancialModule';
 import AdminModule from './modules/admin/AdminModule';
 import StudentsModule from './modules/students/StudentsModule';
+import TeachersModule from './modules/teachers/TeachersModule';
 import './App.css';
 
 // Configuración de React Query
@@ -62,6 +63,11 @@ const AppRoutes: React.FC = () => {
                 <Route path="/estudiantes" element={
                   <ProtectedRoute>
                     <StudentsModule />
+                  </ProtectedRoute>
+                } />
+                <Route path="/maestros" element={
+                  <ProtectedRoute>
+                    <TeachersModule />
                   </ProtectedRoute>
                 } />
                 <Route path="/academico" element={

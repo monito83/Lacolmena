@@ -7,7 +7,8 @@ import {
   Settings, 
   Menu, 
   X,
-  Heart
+  Heart,
+  GraduationCap
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import UserHeader from './UserHeader';
@@ -30,6 +31,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           { name: 'Panel Principal', href: '/', icon: Home },
           { name: 'Familias', href: '/familias', icon: Users },
           { name: 'Niños', href: '/estudiantes', icon: Users },
+          { name: 'Maestros', href: '/maestros', icon: GraduationCap },
           { name: 'Académico', href: '/academico', icon: Users },
           { name: 'Financiero', href: '/financiero', icon: DollarSign },
           { name: 'Administrativo', href: '/administrativo', icon: Settings },
