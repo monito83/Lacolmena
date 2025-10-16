@@ -29,7 +29,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         const navigation = [
           { name: 'Panel Principal', href: '/', icon: Home },
           { name: 'Familias', href: '/familias', icon: Users },
-          { name: 'Estudiantes', href: '/estudiantes', icon: Users },
+          { name: 'Niños', href: '/estudiantes', icon: Users },
           { name: 'Académico', href: '/academico', icon: Users },
           { name: 'Financiero', href: '/financiero', icon: DollarSign },
           { name: 'Administrativo', href: '/administrativo', icon: Settings },

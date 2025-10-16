@@ -32,7 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             is_active
           )
         `)
-        .order('created_at', { ascending: false });
+        .order('family_name', { ascending: true });
 
       if (error) {
         return res.status(500).json({ error: error.message });

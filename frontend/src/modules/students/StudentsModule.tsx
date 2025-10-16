@@ -197,10 +197,10 @@ const StudentsModule: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-4xl waldorf-title mb-2">
-              Gestión de Estudiantes
+              Gestión de Niños
             </h1>
             <p className="waldorf-body-text text-lg">
-              Administra los estudiantes de la comunidad educativa
+              Administra los niños de la comunidad educativa
             </p>
           </div>
           <div className="flex items-center space-x-2">
@@ -270,7 +270,7 @@ const StudentsModule: React.FC = () => {
               style={{ backgroundColor: 'oklch(0.70 0.12 240)' }}
             >
               <Plus className="h-5 w-5" />
-              <span>Nuevo Estudiante</span>
+              <span>Nuevo Niño</span>
             </button>
           </div>
         </div>
@@ -484,7 +484,7 @@ const StudentsModule: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl waldorf-title">Nuevo Estudiante</h2>
+              <h2 className="text-2xl waldorf-title">Nuevo Niño</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 className="text-gray-500 hover:text-gray-700"
