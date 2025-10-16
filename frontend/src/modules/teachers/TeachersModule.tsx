@@ -10,8 +10,6 @@ import {
   MapPin,
   Calendar,
   GraduationCap,
-  BookOpen,
-  Heart,
   Users
 } from 'lucide-react';
 
@@ -118,30 +116,6 @@ const TeachersModule: React.FC = () => {
     return `${age} años`;
   };
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-AR');
-  };
-
-  const getSpecializationIcon = (specialization: string) => {
-    switch (specialization?.toLowerCase()) {
-      case 'matemáticas':
-      case 'matematicas':
-        return <BookOpen className="h-4 w-4" style={{ color: 'oklch(0.60 0.15 240)' }} />;
-      case 'lengua':
-      case 'literatura':
-        return <BookOpen className="h-4 w-4" style={{ color: 'oklch(0.60 0.15 280)' }} />;
-      case 'ciencias':
-      case 'ciencias naturales':
-        return <BookOpen className="h-4 w-4" style={{ color: 'oklch(0.60 0.15 120)' }} />;
-      case 'arte':
-      case 'artes':
-        return <Heart className="h-4 w-4" style={{ color: 'oklch(0.60 0.15 330)' }} />;
-      default:
-        return <GraduationCap className="h-4 w-4" style={{ color: 'oklch(0.60 0.10 270)' }} />;
-    }
-  };
 
   if (loading) {
     return (
