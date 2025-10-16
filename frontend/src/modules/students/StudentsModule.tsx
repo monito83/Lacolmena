@@ -83,7 +83,7 @@ const StudentsModule: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setStudents(data.data || []);
+        setStudents(data || []);
       } else {
         console.error('Error al cargar estudiantes');
       }
@@ -107,7 +107,7 @@ const StudentsModule: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setFamilies(data.data || []);
+        setFamilies(data || []);
       }
     } catch (error) {
       console.error('Error al cargar familias:', error);

@@ -49,8 +49,9 @@ const FamiliesModule: React.FC = () => {
       if (searchTerm) params.append('search', searchTerm);
       if (showActiveOnly) params.append('is_active', 'true');
       
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`http://localhost:3001/api/families?${params}`, {
+      const response = await fetch(`${apiUrl}/families?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -59,7 +60,7 @@ const FamiliesModule: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setFamilies(data.data || []);
+        setFamilies(data || []);
       } else {
         console.error('Error al cargar familias');
       }
