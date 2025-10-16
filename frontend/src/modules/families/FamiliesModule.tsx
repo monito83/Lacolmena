@@ -3,7 +3,6 @@ import {
   Users, 
   Plus, 
   Search, 
-  Filter, 
   Edit, 
   Trash2, 
   Eye, 
@@ -12,10 +11,7 @@ import {
   Mail,
   MapPin,
   User,
-  Calendar,
-  DollarSign,
-  AlertCircle,
-  CheckCircle
+  DollarSign
 } from 'lucide-react';
 
 interface Family {
@@ -107,11 +103,11 @@ const FamiliesModule: React.FC = () => {
     return isActive ? 'Activa' : 'Inactiva';
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-AR');
+  const formatDate = (_dateString: string) => {
+    return new Date(_dateString).toLocaleDateString('es-AR');
   };
 
-  const getTotalStudents = (family: Family) => {
+  const getTotalStudents = (_family: Family) => {
     // Por ahora retornamos 0, se implementará cuando tengamos la relación con estudiantes
     return 0;
   };

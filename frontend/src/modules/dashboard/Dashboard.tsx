@@ -6,7 +6,6 @@ import {
   Heart,
   Calendar,
   AlertCircle,
-  CheckCircle,
   GraduationCap,
   BookOpen,
   Clock
