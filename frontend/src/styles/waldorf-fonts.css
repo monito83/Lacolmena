@@ -1,0 +1,77 @@
+/* Fuentes Waldorf - Alternativas web disponibles */
+
+/* Fuente principal: Quicksand (similar a fuentes Waldorf) */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+/* Fuente para títulos: Merriweather (orgánica y legible) */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap');
+
+/* Fuente alternativa más orgánica: Nunito Sans */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700&display=swap');
+
+/* Fuente para elementos decorativos: Dancing Script */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
+
+/* Variables CSS para las fuentes Waldorf */
+:root {
+  --font-waldorf-primary: 'Quicksand', 'Nunito Sans', 'Inter', system-ui, sans-serif;
+  --font-waldorf-heading: 'Merriweather', 'Georgia', serif;
+  --font-waldorf-display: 'Merriweather', 'Georgia', serif;
+  --font-waldorf-cursive: 'Dancing Script', 'Georgia', serif;
+  --font-waldorf-body: 'Nunito Sans', 'Quicksand', 'Inter', system-ui, sans-serif;
+}
+
+/* Clases de utilidad para fuentes Waldorf */
+.font-waldorf-primary {
+  font-family: var(--font-waldorf-primary);
+}
+
+.font-waldorf-heading {
+  font-family: var(--font-waldorf-heading);
+}
+
+.font-waldorf-display {
+  font-family: var(--font-waldorf-display);
+}
+
+.font-waldorf-cursive {
+  font-family: var(--font-waldorf-cursive);
+}
+
+.font-waldorf-body {
+  font-family: var(--font-waldorf-body);
+}
+
+/* Estilos específicos para elementos Waldorf */
+.waldorf-title {
+  font-family: var(--font-waldorf-display);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: oklch(0.35 0.08 330);
+}
+
+.waldorf-subtitle {
+  font-family: var(--font-waldorf-heading);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  color: oklch(0.45 0.06 330);
+}
+
+.waldorf-body-text {
+  font-family: var(--font-waldorf-body);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+  color: oklch(0.50 0.04 330);
+}
+
+.waldorf-accent {
+  font-family: var(--font-waldorf-cursive);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: oklch(0.60 0.08 166.78);
+}
+
+

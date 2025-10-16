@@ -1,0 +1,65 @@
+@echo off
+echo ========================================
+echo    Limpieza completa - La Colmena
+echo ========================================
+echo.
+
+echo [1/7] Matando TODOS los procesos de Node.js...
+taskkill /F /IM node.exe >nul 2>&1
+taskkill /F /IM vite.exe >nul 2>&1
+taskkill /F /IM tsx.exe >nul 2>&1
+taskkill /F /IM nodemon.exe >nul 2>&1
+echo ✓ Procesos terminados
+
+echo.
+echo [2/7] Esperando 5 segundos...
+timeout /t 5 /nobreak >nul
+
+echo.
+echo [3/7] Matando procesos por puerto específico...
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr :3001 ^| findstr LISTENING') do (
+    echo Matando proceso en puerto 3001: %%a
+    taskkill /F /PID %%a >nul 2>&1
+)
+
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr :3502 ^| findstr LISTENING') do (
+    echo Matando proceso en puerto 3502: %%a
+    taskkill /F /PID %%a >nul 2>&1
+)
+
+echo.
+echo [4/7] Limpiando cache...
+if exist "node_modules\.cache" rmdir /s /q "node_modules\.cache" >nul 2>&1
+if exist "frontend\node_modules\.vite" rmdir /s /q "frontend\node_modules\.vite" >nul 2>&1
+if exist "backend\node_modules\.cache" rmdir /s /q "backend\node_modules\.cache" >nul 2>&1
+echo ✓ Cache limpiado
+
+echo.
+echo [5/7] Verificando puertos libres...
+echo Puerto 3001:
+netstat -ano | findstr :3001
+echo Puerto 3502:
+netstat -ano | findstr :3502
+
+echo.
+echo [6/7] Esperando 3 segundos más...
+timeout /t 3 /nobreak >nul
+
+echo.
+echo [7/7] Iniciando servidores...
+echo.
+echo ========================================
+echo    Servidores iniciando...
+echo    Backend:  http://localhost:3001
+echo    Frontend: http://localhost:3502
+echo ========================================
+echo.
+
+npm run dev
+
+echo.
+echo ========================================
+echo    Servidores detenidos
+echo ========================================
+pause
+

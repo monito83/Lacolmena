@@ -1,0 +1,421 @@
+// ============================================
+// ESQUEMA PRISMA - LA COLMENA
+// Sistema de Gestión Escolar Waldorf
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// MODELOS PRINCIPALES
+// ============================================
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         UserRole @default(FAMILIA)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relaciones
+  profile      UserProfile?
+  teacher      Teacher?
+  students     Student[]
+  payments     Payment[]
+  expenses     Expense[]
+  communications InternalCommunication[]
+  events       Event[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  id             String   @id @default(uuid())
+  userId         String   @unique @map("user_id")
+  firstName      String   @map("first_name")
+  lastName       String   @map("last_name")
+  phone          String?
+  address        String?
+  birthDate      DateTime? @map("birth_date") @db.Date
+  profilePictureUrl String? @map("profile_picture_url")
+  notes          String?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  // Relaciones
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model Family {
+  id                    String   @id @default(uuid())
+  familyName            String   @map("family_name")
+  contactEmail          String?  @map("contact_email")
+  contactPhone          String?  @map("contact_phone")
+  address               String?
+  emergencyContactName  String?  @map("emergency_contact_name")
+  emergencyContactPhone String?  @map("emergency_contact_phone")
+  notes                 String?
+  isActive              Boolean  @default(true) @map("is_active")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  // Relaciones
+  students              Student[]
+  commitments           FraternalCommitment[]
+  payments              Payment[]
+  monthlyPaymentStatus  MonthlyPaymentStatus[]
+
+  @@map("families")
+}
+
+model Student {
+  id            String    @id @default(uuid())
+  familyId      String    @map("family_id")
+  userId        String?   @unique @map("user_id")
+  firstName     String    @map("first_name")
+  lastName      String    @map("last_name")
+  birthDate     DateTime  @map("birth_date") @db.Date
+  gender        Gender?
+  grade         String?
+  enrollmentDate DateTime @map("enrollment_date") @db.Date
+  isActive      Boolean   @default(true) @map("is_active")
+  medicalNotes  String?   @map("medical_notes")
+  specialNeeds  String?   @map("special_needs")
+  photoUrl      String?   @map("photo_url")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relaciones
+  family        Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  commitments   FraternalCommitment[]
+  payments      Payment[]
+  enrollments   StudentEnrollment[]
+  monthlyPaymentStatus MonthlyPaymentStatus[]
+
+  @@map("students")
+}
+
+model Teacher {
+  id              String   @id @default(uuid())
+  userId          String   @unique @map("user_id")
+  firstName       String   @map("first_name")
+  lastName        String   @map("last_name")
+  phone           String?
+  email           String?
+  specializations String[] @default([])
+  hireDate        DateTime @map("hire_date") @db.Date
+  isActive        Boolean  @default(true) @map("is_active")
+  bio             String?
+  photoUrl        String?  @map("photo_url")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relaciones
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  classes         Class[]
+
+  @@map("teachers")
+}
+
+// ============================================
+// SISTEMA FRATERNO DE APORTES
+// ============================================
+
+model FraternalCommitment {
+  id                String           @id @default(uuid())
+  familyId          String           @map("family_id")
+  studentId         String           @map("student_id")
+  academicYear      String           @map("academic_year")
+  agreedAmount      Decimal          @map("agreed_amount") @db.Decimal(10,2)
+  suggestedAmount   Decimal?         @map("suggested_amount") @db.Decimal(10,2)
+  paymentFrequency  PaymentFrequency @default(MENSUAL) @map("payment_frequency")
+  status            CommitmentStatus @default(ACTIVO)
+  commitmentDate    DateTime         @map("commitment_date") @db.Date
+  reviewDate        DateTime?        @map("review_date") @db.Date
+  notes             String?
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+
+  // Relaciones
+  family            Family           @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  student           Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  payments          Payment[]
+  monthlyPaymentStatus MonthlyPaymentStatus[]
+
+  @@map("fraternal_commitments")
+}
+
+model Payment {
+  id             String        @id @default(uuid())
+  familyId       String        @map("family_id")
+  studentId      String        @map("student_id")
+  commitmentId   String?       @map("commitment_id")
+  amount         Decimal       @db.Decimal(10,2)
+  paymentDate    DateTime      @map("payment_date") @db.Date
+  paymentMethod  PaymentMethod @map("payment_method")
+  referenceNumber String?      @map("reference_number")
+  monthPaid      String?       @map("month_paid")
+  notes          String?
+  recordedBy     String?       @map("recorded_by")
+  createdAt      DateTime      @default(now()) @map("created_at")
+
+  // Relaciones
+  family         Family        @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  student        Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  commitment     FraternalCommitment? @relation(fields: [commitmentId], references: [id], onDelete: SetNull)
+  recorder       User?         @relation(fields: [recordedBy], references: [id])
+
+  @@map("payments")
+}
+
+model MonthlyPaymentStatus {
+  id             String     @id @default(uuid())
+  familyId       String     @map("family_id")
+  studentId      String     @map("student_id")
+  commitmentId   String     @map("commitment_id")
+  year           Int
+  month          Int
+  expectedAmount Decimal    @map("expected_amount") @db.Decimal(10,2)
+  paidAmount     Decimal    @default(0) @map("paid_amount") @db.Decimal(10,2)
+  status         PaymentStatus @default(PENDIENTE)
+  dueDate        DateTime?  @map("due_date") @db.Date
+  notes          String?
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  // Relaciones
+  family         Family     @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  student        Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  commitment     FraternalCommitment @relation(fields: [commitmentId], references: [id], onDelete: Cascade)
+
+  @@unique([familyId, studentId, commitmentId, year, month])
+  @@map("monthly_payment_status")
+}
+
+// ============================================
+// GESTIÓN ACADÉMICA
+// ============================================
+
+model AcademicYear {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  startDate DateTime @map("start_date") @db.Date
+  endDate   DateTime @map("end_date") @db.Date
+  isActive  Boolean  @default(false) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relaciones
+  classes   Class[]
+  enrollments StudentEnrollment[]
+
+  @@map("academic_years")
+}
+
+model Class {
+  id            String   @id @default(uuid())
+  academicYearId String  @map("academic_year_id")
+  name          String
+  teacherId     String?  @map("teacher_id")
+  maxStudents   Int      @default(25) @map("max_students")
+  description   String?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  // Relaciones
+  academicYear  AcademicYear @relation(fields: [academicYearId], references: [id], onDelete: Cascade)
+  teacher       Teacher?     @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+  enrollments   StudentEnrollment[]
+
+  @@map("classes")
+}
+
+model StudentEnrollment {
+  id            String @id @default(uuid())
+  studentId     String @map("student_id")
+  classId       String @map("class_id")
+  academicYearId String @map("academic_year_id")
+  enrollmentDate DateTime @map("enrollment_date") @db.Date
+  status        EnrollmentStatus @default(ACTIVO)
+  notes         String?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  // Relaciones
+  student       Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class         Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
+  academicYear  AcademicYear @relation(fields: [academicYearId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, academicYearId])
+  @@map("student_enrollments")
+}
+
+// ============================================
+// GESTIÓN FINANCIERA
+// ============================================
+
+model Expense {
+  id            String   @id @default(uuid())
+  category      String
+  subcategory   String?
+  description   String
+  amount        Decimal  @db.Decimal(10,2)
+  expenseDate   DateTime @map("expense_date") @db.Date
+  paymentMethod PaymentMethod? @map("payment_method")
+  vendor        String?
+  receiptUrl    String?  @map("receipt_url")
+  approvedBy    String?  @map("approved_by")
+  notes         String?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  // Relaciones
+  approver      User?    @relation(fields: [approvedBy], references: [id])
+
+  @@map("expenses")
+}
+
+model OtherIncome {
+  id          String   @id @default(uuid())
+  category    String
+  description String
+  amount      Decimal  @db.Decimal(10,2)
+  incomeDate  DateTime @map("income_date") @db.Date
+  source      String?
+  receiptUrl  String?  @map("receipt_url")
+  notes       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("other_income")
+}
+
+// ============================================
+// COMUNICACIONES
+// ============================================
+
+model InternalCommunication {
+  id             String   @id @default(uuid())
+  senderId       String   @map("sender_id")
+  title          String
+  content        String
+  priority       Priority @default(NORMAL)
+  targetAudience TargetAudience?
+  isPublished    Boolean  @default(false) @map("is_published")
+  publishedAt    DateTime? @map("published_at")
+  expiresAt      DateTime? @map("expires_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  // Relaciones
+  sender         User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@map("internal_communications")
+}
+
+model Event {
+  id                String        @id @default(uuid())
+  title             String
+  description       String?
+  eventDate         DateTime      @map("event_date") @db.Date
+  startTime         DateTime?     @map("start_time") @db.Time
+  endTime           DateTime?     @map("end_time") @db.Time
+  location          String?
+  organizerId       String?       @map("organizer_id")
+  targetAudience    TargetAudience?
+  isRecurring       Boolean       @default(false) @map("is_recurring")
+  recurrencePattern String?       @map("recurrence_pattern")
+  maxAttendees      Int?          @map("max_attendees")
+  createdAt         DateTime      @default(now()) @map("created_at")
+
+  // Relaciones
+  organizer         User?         @relation(fields: [organizerId], references: [id])
+
+  @@map("events")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum UserRole {
+  ADMIN
+  MAESTRO
+  FAMILIA
+
+  @@map("user_role")
+}
+
+enum Gender {
+  MASCULINO
+  FEMENINO
+  OTRO
+
+  @@map("gender")
+}
+
+enum PaymentFrequency {
+  MENSUAL
+  TRIMESTRAL
+  ANUAL
+
+  @@map("payment_frequency")
+}
+
+enum CommitmentStatus {
+  ACTIVO
+  SUSPENDIDO
+  MODIFICADO
+  FINALIZADO
+
+  @@map("commitment_status")
+}
+
+enum PaymentMethod {
+  EFECTIVO
+  TRANSFERENCIA
+  CHEQUE
+  TARJETA
+
+  @@map("payment_method")
+}
+
+enum PaymentStatus {
+  PENDIENTE
+  PARCIAL
+  COMPLETO
+  EXCEDIDO
+
+  @@map("payment_status")
+}
+
+enum EnrollmentStatus {
+  ACTIVO
+  SUSPENDIDO
+  EGRESADO
+
+  @@map("enrollment_status")
+}
+
+enum Priority {
+  BAJA
+  NORMAL
+  ALTA
+  URGENTE
+
+  @@map("priority")
+}
+
+enum TargetAudience {
+  TODOS
+  MAESTROS
+  FAMILIAS
+  ESTUDIANTES
+
+  @@map("target_audience")
+}

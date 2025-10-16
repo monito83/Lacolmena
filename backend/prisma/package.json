@@ -1,0 +1,14 @@
+{
+  "name": "prisma-seed",
+  "version": "1.0.0",
+  "description": "Seed script for La Colmena database",
+  "main": "seed.ts",
+  "scripts": {
+    "seed": "tsx seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.7.1",
+    "bcryptjs": "^2.4.3",
+    "tsx": "^4.6.2"
+  }
+}
