@@ -42,7 +42,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { data: profile, error: profileError } = await supabase
       .from('user_profiles')
       .select('*')
-      .eq('id', authData.user.id)
+      .eq('user_id', authData.user.id)
       .single();
 
     if (profileError) {

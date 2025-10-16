@@ -7,9 +7,10 @@ Tabla principal de usuarios del sistema.
 
 | Campo | Tipo | Descripción | Ejemplo |
 |-------|------|-------------|---------|
-| `id` | uuid | ID único del usuario (PK) | `1f441787-bdc0-42bb-9291-c59552474570` |
+| `id` | uuid | ID único del registro (PK) | `08811d46-0525-408e-bfec-918956c834ac` |
+| `user_id` | uuid | ID del usuario en Supabase Auth (FK) | `1a5a53e8-81d0-41dd-b48a-08bfa4a50727` |
 | `email` | varchar | Email del usuario | `admin@lacolmena.edu` |
-| `password_hash` | varchar | Hash de la contraseña | `$2a$10$gh55xqdMW4c6YBL04XaW4...` |
+| `password_hash` | varchar | Hash de la contraseña (personalizado) | `$2a$10$gh55xqdMW4c6YBL04XaW4...` |
 | `role` | varchar | Rol del usuario | `admin`, `teacher`, `secretary` |
 | `is_active` | boolean | Estado del usuario | `true` / `false` |
 
