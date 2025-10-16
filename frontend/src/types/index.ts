@@ -9,12 +9,14 @@ export interface User {
   updatedAt: Date;
 }
 
-export enum UserRole {
-  ADMIN = 'admin',
-  TEACHER = 'teacher',
-  ACCOUNTANT = 'accountant',
-  SECRETARY = 'secretary'
-}
+export const UserRole = {
+  ADMIN: 'admin',
+  TEACHER: 'teacher',
+  ACCOUNTANT: 'accountant',
+  SECRETARY: 'secretary'
+} as const;
+
+export type UserRole = typeof UserRole[keyof typeof UserRole];
 
 export interface Child {
   id: string;
@@ -32,12 +34,14 @@ export interface Child {
   updatedAt: Date;
 }
 
-export enum ChildStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  GRADUATED = 'graduated',
-  TRANSFERRED = 'transferred'
-}
+export const ChildStatus = {
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+  GRADUATED: 'graduated',
+  TRANSFERRED: 'transferred'
+} as const;
+
+export type ChildStatus = typeof ChildStatus[keyof typeof ChildStatus];
 
 export interface Family {
   id: string;
@@ -71,11 +75,13 @@ export interface Teacher {
   updatedAt: Date;
 }
 
-export enum TeacherStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  ON_LEAVE = 'on_leave'
-}
+export const TeacherStatus = {
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+  ON_LEAVE: 'on_leave'
+} as const;
+
+export type TeacherStatus = typeof TeacherStatus[keyof typeof TeacherStatus];
 
 // Sistema Fraterno de Aportes
 export interface FraternalCommitment {
@@ -91,12 +97,14 @@ export interface FraternalCommitment {
   updatedAt: Date;
 }
 
-export enum CommitmentStatus {
-  ACTIVE = 'active',
-  PAUSED = 'paused',
-  UNDER_REVIEW = 'under_review',
-  INCREASED = 'increased'
-}
+export const CommitmentStatus = {
+  ACTIVE: 'active',
+  PAUSED: 'paused',
+  UNDER_REVIEW: 'under_review',
+  INCREASED: 'increased'
+} as const;
+
+export type CommitmentStatus = typeof CommitmentStatus[keyof typeof CommitmentStatus];
 
 export interface Payment {
   id: string;
@@ -110,18 +118,22 @@ export interface Payment {
   updatedAt: Date;
 }
 
-export enum PaymentType {
-  ENROLLMENT = 'enrollment',
-  MONTHLY_CONTRIBUTION = 'monthly_contribution',
-  EXTRA_CONTRIBUTION = 'extra_contribution'
-}
+export const PaymentType = {
+  ENROLLMENT: 'enrollment',
+  MONTHLY_CONTRIBUTION: 'monthly_contribution',
+  EXTRA_CONTRIBUTION: 'extra_contribution'
+} as const;
 
-export enum PaymentStatus {
-  PENDING = 'pending',
-  PAID = 'paid',
-  OVERDUE = 'overdue',
-  CANCELLED = 'cancelled'
-}
+export type PaymentType = typeof PaymentType[keyof typeof PaymentType];
+
+export const PaymentStatus = {
+  PENDING: 'pending',
+  PAID: 'paid',
+  OVERDUE: 'overdue',
+  CANCELLED: 'cancelled'
+} as const;
+
+export type PaymentStatus = typeof PaymentStatus[keyof typeof PaymentStatus];
 
 export interface Expense {
   id: string;
@@ -136,14 +148,16 @@ export interface Expense {
   updatedAt: Date;
 }
 
-export enum ExpenseCategory {
-  SALARIES = 'salaries',
-  UTILITIES = 'utilities',
-  SUPPLIES = 'supplies',
-  MAINTENANCE = 'maintenance',
-  EQUIPMENT = 'equipment',
-  OTHER = 'other'
-}
+export const ExpenseCategory = {
+  SALARIES: 'salaries',
+  UTILITIES: 'utilities',
+  SUPPLIES: 'supplies',
+  MAINTENANCE: 'maintenance',
+  EQUIPMENT: 'equipment',
+  OTHER: 'other'
+} as const;
+
+export type ExpenseCategory = typeof ExpenseCategory[keyof typeof ExpenseCategory];
 
 // Dashboard y Reportes
 export interface DashboardMetrics {
@@ -166,12 +180,14 @@ export interface Report {
   generatedBy: string;
 }
 
-export enum ReportType {
-  FINANCIAL_SUMMARY = 'financial_summary',
-  FAMILY_CONTRIBUTIONS = 'family_contributions',
-  EXPENSE_BREAKDOWN = 'expense_breakdown',
-  ENROLLMENT_STATUS = 'enrollment_status'
-}
+export const ReportType = {
+  FINANCIAL_SUMMARY: 'financial_summary',
+  FAMILY_CONTRIBUTIONS: 'family_contributions',
+  EXPENSE_BREAKDOWN: 'expense_breakdown',
+  ENROLLMENT_STATUS: 'enrollment_status'
+} as const;
+
+export type ReportType = typeof ReportType[keyof typeof ReportType];
 
 // API Response types
 export interface ApiResponse<T> {

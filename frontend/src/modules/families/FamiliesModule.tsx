@@ -116,12 +116,12 @@ const FamiliesModule: React.FC = () => {
     return 0;
   };
 
-  const getTotalCommitments = (family: Family) => {
+  const getTotalCommitments = (_family: Family) => {
     // Por ahora retornamos 0, se implementará cuando tengamos la relación con compromisos fraternos
     return 0;
   };
 
-  const getTotalMonthlyAmount = (family: Family) => {
+  const getTotalMonthlyAmount = (_family: Family) => {
     // Por ahora retornamos 0, se implementará cuando tengamos la relación con compromisos fraternos
     return 0;
   };
