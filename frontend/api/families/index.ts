@@ -61,6 +61,51 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       res.status(201).json(family);
 
+    } else if (req.method === 'PUT') {
+      // Actualizar familia
+      const { id } = req.query;
+      const familyData = req.body;
+
+      if (!id) {
+        return res.status(400).json({ error: 'ID de familia requerido' });
+      }
+
+      if (!familyData.family_name) {
+        return res.status(400).json({ error: 'Nombre de familia requerido' });
+      }
+
+      const { data: family, error } = await supabase
+        .from('families')
+        .update(familyData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      res.status(200).json(family);
+
+    } else if (req.method === 'DELETE') {
+      // Desactivar familia (soft delete)
+      const { id } = req.query;
+
+      if (!id) {
+        return res.status(400).json({ error: 'ID de familia requerido' });
+      }
+
+      const { error } = await supabase
+        .from('families')
+        .update({ is_active: false })
+        .eq('id', id);
+
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      res.status(200).json({ message: 'Familia desactivada exitosamente' });
+
     } else {
       res.status(405).json({ error: 'Método no permitido' });
     }

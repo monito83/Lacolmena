@@ -85,8 +85,9 @@ const FamiliesModule: React.FC = () => {
     }
 
     try {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`http://localhost:3001/api/families/${familyId}`, {
+      const response = await fetch(`${apiUrl}/families?id=${familyId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
