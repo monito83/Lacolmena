@@ -38,9 +38,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    // Obtener información del usuario desde la tabla profiles
+    // Obtener información del usuario desde la tabla user_profiles
     const { data: profile, error: profileError } = await supabase
-      .from('profiles')
+      .from('user_profiles')
       .select('*')
       .eq('id', authData.user.id)
       .single();
