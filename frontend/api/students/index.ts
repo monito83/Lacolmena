@@ -44,8 +44,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const studentData = req.body;
 
       // Validación básica
-      if (!studentData.first_name || !studentData.last_name || !studentData.family_id) {
-        return res.status(400).json({ error: 'Datos requeridos faltantes' });
+      if (!studentData.first_name || !studentData.last_name || !studentData.family_id || !studentData.birth_date || !studentData.enrollment_date) {
+        return res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido, familia, fecha de nacimiento y fecha de inscripción' });
       }
 
       const { data: student, error } = await supabase
@@ -69,8 +69,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(400).json({ error: 'ID de estudiante requerido' });
       }
 
-      if (!studentData.first_name || !studentData.last_name || !studentData.family_id) {
-        return res.status(400).json({ error: 'Datos requeridos faltantes' });
+      if (!studentData.first_name || !studentData.last_name || !studentData.family_id || !studentData.birth_date || !studentData.enrollment_date) {
+        return res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido, familia, fecha de nacimiento y fecha de inscripción' });
       }
 
       const { data: student, error } = await supabase

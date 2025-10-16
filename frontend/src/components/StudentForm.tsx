@@ -124,7 +124,16 @@ const StudentForm: React.FC<StudentFormProps> = ({ isOpen, onClose, onSave, stud
 
     setLoading(true);
     try {
-      await onSave(formData);
+      // Limpiar campos vacíos antes de enviar
+      const cleanData = {
+        ...formData,
+        gender: formData.gender || null,
+        grade: formData.grade || null,
+        medical_notes: formData.medical_notes || null,
+        special_needs: formData.special_needs || null
+      };
+      
+      await onSave(cleanData);
       onClose();
     } catch (error) {
       console.error('Error al guardar niño:', error);
