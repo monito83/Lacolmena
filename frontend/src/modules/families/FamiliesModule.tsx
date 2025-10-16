@@ -165,11 +165,10 @@ const FamiliesModule: React.FC = () => {
                 placeholder="Buscar por nombre de familia, contacto o email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text focus:ring-purple-400"
                 style={{ 
                   backgroundColor: 'oklch(0.99 0.01 270)',
-                  borderColor: 'oklch(0.85 0.05 270)',
-                  focusRingColor: 'oklch(0.70 0.12 330)'
+                  borderColor: 'oklch(0.85 0.05 270)'
                 }}
               />
             </div>

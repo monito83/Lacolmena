@@ -77,7 +77,8 @@ const StudentsModule: React.FC = () => {
       if (showActiveOnly) params.append('is_active', 'true');
       
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/api/students?${params}`, {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const response = await fetch(`${apiUrl}/students?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -99,8 +100,9 @@ const StudentsModule: React.FC = () => {
 
   const loadFamilies = async () => {
     try {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/families', {
+      const response = await fetch(`${apiUrl}/families`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -122,8 +124,9 @@ const StudentsModule: React.FC = () => {
     }
 
     try {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/api/students/${studentId}`, {
+      const response = await fetch(`${apiUrl}/students/${studentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -222,11 +225,10 @@ const StudentsModule: React.FC = () => {
                 placeholder="Buscar por nombre o apellido..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text focus:ring-purple-400"
                 style={{ 
                   backgroundColor: 'oklch(0.99 0.01 270)',
-                  borderColor: 'oklch(0.85 0.05 270)',
-                  focusRingColor: 'oklch(0.70 0.12 330)'
+                  borderColor: 'oklch(0.85 0.05 270)'
                 }}
               />
             </div>
@@ -238,11 +240,10 @@ const StudentsModule: React.FC = () => {
               <select
                 value={selectedFamily}
                 onChange={(e) => setSelectedFamily(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text focus:ring-purple-400"
                 style={{ 
                   backgroundColor: 'oklch(0.99 0.01 270)',
-                  borderColor: 'oklch(0.85 0.05 270)',
-                  focusRingColor: 'oklch(0.70 0.12 330)'
+                  borderColor: 'oklch(0.85 0.05 270)'
                 }}
               >
                 <option value="">Todas las familias</option>

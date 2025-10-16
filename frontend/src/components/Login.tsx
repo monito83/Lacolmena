@@ -74,11 +74,10 @@ const Login: React.FC = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text focus:ring-purple-400"
                     style={{ 
                       backgroundColor: 'oklch(0.99 0.01 270)',
-                      borderColor: 'oklch(0.85 0.05 270)',
-                      focusRingColor: 'oklch(0.70 0.12 330)'
+                      borderColor: 'oklch(0.85 0.05 270)'
                     }}
                     placeholder="tu@email.com"
                   />
@@ -102,11 +101,10 @@ const Login: React.FC = () => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text"
+                    className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text focus:ring-purple-400"
                     style={{ 
                       backgroundColor: 'oklch(0.99 0.01 270)',
-                      borderColor: 'oklch(0.85 0.05 270)',
-                      focusRingColor: 'oklch(0.70 0.12 330)'
+                      borderColor: 'oklch(0.85 0.05 270)'
                     }}
                     placeholder="Tu contraseña"
                   />
@@ -137,10 +135,9 @@ const Login: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors waldorf-body-text"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors waldorf-body-text focus:ring-purple-400"
                 style={{ 
-                  backgroundColor: isLoading ? 'oklch(0.70 0.05 270)' : 'oklch(0.70 0.12 330)',
-                  focusRingColor: 'oklch(0.70 0.12 330)'
+                  backgroundColor: isLoading ? 'oklch(0.70 0.05 270)' : 'oklch(0.70 0.12 330)'
                 }}
               >
                 {isLoading ? (
