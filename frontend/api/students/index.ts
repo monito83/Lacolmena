@@ -60,6 +60,51 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       res.status(201).json(student);
 
+    } else if (req.method === 'PUT') {
+      // Actualizar estudiante
+      const { id } = req.query;
+      const studentData = req.body;
+
+      if (!id) {
+        return res.status(400).json({ error: 'ID de estudiante requerido' });
+      }
+
+      if (!studentData.first_name || !studentData.last_name || !studentData.family_id) {
+        return res.status(400).json({ error: 'Datos requeridos faltantes' });
+      }
+
+      const { data: student, error } = await supabase
+        .from('students')
+        .update(studentData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      res.status(200).json(student);
+
+    } else if (req.method === 'DELETE') {
+      // Desactivar estudiante (soft delete)
+      const { id } = req.query;
+
+      if (!id) {
+        return res.status(400).json({ error: 'ID de estudiante requerido' });
+      }
+
+      const { error } = await supabase
+        .from('students')
+        .update({ is_active: false })
+        .eq('id', id);
+
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      res.status(200).json({ message: 'Estudiante desactivado exitosamente' });
+
     } else {
       res.status(405).json({ error: 'Método no permitido' });
     }

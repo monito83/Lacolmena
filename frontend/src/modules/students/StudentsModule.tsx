@@ -16,6 +16,7 @@ import {
   XCircle,
   BookOpen
 } from 'lucide-react';
+import StudentForm from '../../components/StudentForm';
 
 interface Student {
   id: string;
@@ -122,7 +123,7 @@ const StudentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/students/${studentId}`, {
+      const response = await fetch(`${apiUrl}/students?id=${studentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -138,6 +139,62 @@ const StudentsModule: React.FC = () => {
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+
+  const handleCreateStudent = async (studentData: Omit<Student, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${apiUrl}/students`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(studentData)
+      });
+
+      if (response.ok) {
+        loadStudents(); // Recargar la lista
+      } else {
+        throw new Error('Error al crear estudiante');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  };
+
+  const handleEditStudent = async (studentData: Omit<Student, 'id' | 'created_at' | 'updated_at'>) => {
+    if (!selectedStudent) return;
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${apiUrl}/students?id=${selectedStudent.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(studentData)
+      });
+
+      if (response.ok) {
+        loadStudents(); // Recargar la lista
+        setSelectedStudent(null);
+      } else {
+        throw new Error('Error al actualizar estudiante');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  };
+
+  const handleOpenEditModal = (student: Student) => {
+    setSelectedStudent(student);
+    setShowCreateModal(true);
   };
 
   const getStatusColor = (isActive: boolean) => {
@@ -398,10 +455,7 @@ const StudentsModule: React.FC = () => {
                         <Eye className="h-4 w-4" style={{ color: 'oklch(0.60 0.10 240)' }} />
                       </button>
                       <button
-                        onClick={() => {
-                          setSelectedStudent(student);
-                          // Aquí podrías abrir un modal de edición
-                        }}
+                        onClick={() => handleOpenEditModal(student)}
                         className="p-2 rounded-lg transition-colors"
                         style={{ backgroundColor: 'oklch(0.96 0.02 30)' }}
                         title="Editar"
@@ -479,23 +533,18 @@ const StudentsModule: React.FC = () => {
         </div>
       )}
 
-      {/* Modal de crear estudiante (placeholder) */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl waldorf-title">Nuevo Niño</h2>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                ×
-              </button>
-            </div>
-            <p className="waldorf-body-text">Formulario de creación de estudiante (en desarrollo)</p>
-          </div>
-        </div>
-      )}
+      {/* Modal de crear/editar estudiante */}
+      <StudentForm
+        isOpen={showCreateModal}
+        onClose={() => {
+          setShowCreateModal(false);
+          setSelectedStudent(null);
+        }}
+        onSave={selectedStudent ? handleEditStudent : handleCreateStudent}
+        student={selectedStudent}
+        mode={selectedStudent ? 'edit' : 'create'}
+        families={families}
+      />
     </div>
   );
 };
