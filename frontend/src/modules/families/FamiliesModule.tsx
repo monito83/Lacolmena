@@ -13,6 +13,7 @@ import {
   User,
   DollarSign
 } from 'lucide-react';
+import FamilyForm from '../../components/FamilyForm';
 
 interface Family {
   id: string;
@@ -124,6 +125,62 @@ const FamiliesModule: React.FC = () => {
   const getTotalMonthlyAmount = (_family: Family) => {
     // Por ahora retornamos 0, se implementará cuando tengamos la relación con compromisos fraternos
     return 0;
+  };
+
+  const handleCreateFamily = async (familyData: Omit<Family, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${apiUrl}/families`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(familyData)
+      });
+
+      if (response.ok) {
+        loadFamilies(); // Recargar la lista
+      } else {
+        throw new Error('Error al crear familia');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  };
+
+  const handleEditFamily = async (familyData: Omit<Family, 'id' | 'created_at' | 'updated_at'>) => {
+    if (!selectedFamily) return;
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`${apiUrl}/families?id=${selectedFamily.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(familyData)
+      });
+
+      if (response.ok) {
+        loadFamilies(); // Recargar la lista
+        setSelectedFamily(null);
+      } else {
+        throw new Error('Error al actualizar familia');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  };
+
+  const handleOpenEditModal = (family: Family) => {
+    setSelectedFamily(family);
+    setShowCreateModal(true);
   };
 
   const formatCurrency = (amount: number) => {
@@ -322,10 +379,7 @@ const FamiliesModule: React.FC = () => {
                       <Eye className="h-4 w-4" style={{ color: 'oklch(0.60 0.10 240)' }} />
                     </button>
                     <button
-                      onClick={() => {
-                        setSelectedFamily(family);
-                        // Aquí podrías abrir un modal de edición
-                      }}
+                      onClick={() => handleOpenEditModal(family)}
                       className="p-2 rounded-lg transition-colors"
                       style={{ backgroundColor: 'oklch(0.96 0.02 30)' }}
                       title="Editar"
@@ -388,23 +442,17 @@ const FamiliesModule: React.FC = () => {
         </div>
       )}
 
-      {/* Modal de crear familia (placeholder) */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl waldorf-title">Nueva Familia</h2>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                ×
-              </button>
-            </div>
-            <p className="waldorf-body-text">Formulario de creación de familia (en desarrollo)</p>
-          </div>
-        </div>
-      )}
+      {/* Modal de crear/editar familia */}
+      <FamilyForm
+        isOpen={showCreateModal}
+        onClose={() => {
+          setShowCreateModal(false);
+          setSelectedFamily(null);
+        }}
+        onSave={selectedFamily ? handleEditFamily : handleCreateFamily}
+        family={selectedFamily}
+        mode={selectedFamily ? 'edit' : 'create'}
+      />
     </div>
   );
 };
