@@ -117,7 +117,8 @@ const TeachersModule: React.FC = () => {
         setShowCreateModal(false);
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al crear maestro');
+        console.error('Error response:', errorData);
+        throw new Error(errorData.error || `Error al crear maestro (${response.status})`);
       }
     } catch (error) {
       console.error('Error al crear maestro:', error);

@@ -42,6 +42,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState<string>('');
 
   useEffect(() => {
     if (mode === 'edit' && teacher) {
@@ -105,6 +106,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
     }
 
     setLoading(true);
+    setSubmitError('');
     try {
       // Limpiar campos vacíos antes de enviar
       const cleanData = {
@@ -122,6 +124,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
       onClose();
     } catch (error) {
       console.error('Error al guardar maestro:', error);
+      setSubmitError(error instanceof Error ? error.message : 'Error desconocido al guardar maestro');
     } finally {
       setLoading(false);
     }
@@ -372,6 +375,22 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
               </label>
             </div>
           </div>
+
+          {/* Error de envío */}
+          {submitError && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="flex">
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-red-800">
+                    Error al guardar maestro
+                  </h3>
+                  <div className="mt-2 text-sm text-red-700">
+                    {submitError}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Botones */}
           <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
