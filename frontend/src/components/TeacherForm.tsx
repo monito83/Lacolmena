@@ -34,7 +34,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
     email: '',
     phone: '',
     address: '',
-        specializations: [],
+    specializations: [] as string[],
     bio: '',
     photo_url: '',
     birth_date: '',
@@ -66,7 +66,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
     }
   }, [mode, teacher]);
 
-  const handleInputChange = (field: string, value: string | boolean) => {
+  const handleInputChange = (field: string, value: string | boolean | string[]) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
