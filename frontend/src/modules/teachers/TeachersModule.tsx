@@ -21,12 +21,13 @@ interface Teacher {
   email: string;
   phone?: string;
   address?: string;
-  specialization?: string[]; // Cambiado a array
+  specializations?: string[]; // Corregido: con 's' al final
   bio?: string;
   photo_url?: string;
   birth_date?: string;
   hire_date: string;
   assigned_grade?: string;
+  user_id?: string; // Agregado campo user_id
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -300,9 +301,9 @@ const TeachersModule: React.FC = () => {
                     <div className="flex items-center space-x-2 mb-3">
                       <GraduationCap className="h-4 w-4" style={{ color: 'oklch(0.60 0.10 270)' }} />
                       <span className="waldorf-body-text text-sm">
-                        {Array.isArray(teacher.specialization) 
-                          ? teacher.specialization.join(', ') 
-                          : teacher.specialization || 'Sin especialización'}
+                        {Array.isArray(teacher.specializations) 
+                          ? teacher.specializations.join(', ') 
+                          : teacher.specializations || 'Sin especialización'}
                       </span>
                     </div>
                   </div>

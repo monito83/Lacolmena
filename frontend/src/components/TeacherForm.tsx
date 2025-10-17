@@ -8,12 +8,13 @@ interface Teacher {
   email: string;
   phone?: string;
   address?: string;
-  specialization?: string[]; // Cambiado a array
+  specializations?: string[]; // Corregido: con 's' al final
   bio?: string;
   photo_url?: string;
   birth_date?: string;
   hire_date: string;
   assigned_grade?: string;
+  user_id?: string; // Agregado campo user_id
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -33,7 +34,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
     email: '',
     phone: '',
     address: '',
-        specialization: [],
+        specializations: [],
     bio: '',
     photo_url: '',
     birth_date: '',
@@ -54,7 +55,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
         email: teacher.email || '',
         phone: teacher.phone || '',
         address: teacher.address || '',
-        specialization: teacher.specialization || [],
+        specializations: teacher.specializations || [],
         bio: teacher.bio || '',
         photo_url: teacher.photo_url || '',
         birth_date: teacher.birth_date || '',
@@ -120,7 +121,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
         ...formData,
         phone: formData.phone && formData.phone.trim() !== '' ? formData.phone : undefined,
         address: formData.address && formData.address.trim() !== '' ? formData.address : undefined,
-        specialization: formData.specialization && formData.specialization.length > 0 ? formData.specialization : undefined,
+        specializations: formData.specializations && formData.specializations.length > 0 ? formData.specializations : undefined,
         bio: formData.bio && formData.bio.trim() !== '' ? formData.bio : undefined,
         photo_url: formData.photo_url && formData.photo_url.trim() !== '' ? formData.photo_url : undefined,
         birth_date: formData.birth_date && formData.birth_date.trim() !== '' ? formData.birth_date : undefined,
@@ -287,11 +288,11 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
                 </label>
                 <input
                   type="text"
-                  value={Array.isArray(formData.specialization) ? formData.specialization.join(', ') : formData.specialization || ''}
+                  value={Array.isArray(formData.specializations) ? formData.specializations.join(', ') : formData.specializations || ''}
                   onChange={(e) => {
                     const value = e.target.value;
                     const specializations = value.split(',').map(s => s.trim()).filter(s => s !== '');
-                    handleInputChange('specialization', specializations);
+                    handleInputChange('specializations', specializations);
                   }}
                   className="w-full px-4 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent"
                   style={{ 
