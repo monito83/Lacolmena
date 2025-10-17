@@ -70,6 +70,11 @@ const AppRoutes: React.FC = () => {
                     <TeachersModule />
                   </ProtectedRoute>
                 } />
+                <Route path="/financiero" element={
+                  <ProtectedRoute>
+                    <FinancialModule />
+                  </ProtectedRoute>
+                } />
                 <Route path="/academico" element={
                   <ProtectedRoute>
                     <AcademicModule />
