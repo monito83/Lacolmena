@@ -22,6 +22,7 @@ interface Teacher {
   phone?: string;
   email?: string; // Es nullable en la BD
   specializations?: string[]; // ARRAY en la BD
+  birth_date?: string;
   hire_date: string;
   is_active: boolean;
   bio?: string;
@@ -181,6 +182,18 @@ const TeachersModule: React.FC = () => {
     return isActive ? 'Activo' : 'Inactivo';
   };
 
+  const calculateAge = (birthDate: string) => {
+    if (!birthDate) return 'N/A';
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return `${age} años`;
+  };
+
 
   if (loading) {
     return (
@@ -325,8 +338,8 @@ const TeachersModule: React.FC = () => {
                   <div className="flex items-center space-x-2">
                     <Calendar className="h-4 w-4" style={{ color: 'oklch(0.60 0.10 240)' }} />
                     <div>
-                      <p className="waldorf-body-text text-xs opacity-75">Contratado</p>
-                      <p className="waldorf-title text-sm">{new Date(teacher.hire_date).toLocaleDateString('es-ES')}</p>
+                      <p className="waldorf-body-text text-xs opacity-75">Edad</p>
+                      <p className="waldorf-title text-sm">{calculateAge(teacher.birth_date || '')}</p>
                     </div>
                   </div>
 
