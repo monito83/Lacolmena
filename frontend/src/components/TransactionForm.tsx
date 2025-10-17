@@ -40,6 +40,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, mode, on
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string>('');
+  const [categories, setCategories] = useState<Array<{id: string, name: string, color: string}>>([]);
+  const [cashBoxes, setCashBoxes] = useState<Array<{id: string, name: string, color: string}>>([]);
+
+  const apiUrl = import.meta.env.VITE_API_URL || '';
 
   useEffect(() => {
     if (mode === 'edit' && transaction) {
@@ -56,6 +60,20 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, mode, on
       });
     }
   }, [mode, transaction]);
+
+  useEffect(() => {
+    // Cargar categorías
+    fetch(`${apiUrl}/transaction-categories?is_active=true`)
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error('Error cargando categorías:', err));
+
+    // Cargar cajas
+    fetch(`${apiUrl}/cash-boxes?is_active=true`)
+      .then(res => res.json())
+      .then(data => setCashBoxes(data))
+      .catch(err => console.error('Error cargando cajas:', err));
+  }, [apiUrl]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -126,26 +144,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, mode, on
     }
   };
 
-  const categories = [
-    'cuotas',
-    'materiales',
-    'sueldos',
-    'donaciones',
-    'infraestructura',
-    'mantenimiento',
-    'servicios',
-    'alimentación',
-    'transporte',
-    'comunicaciones',
-    'otros'
-  ];
-
-  const cashBoxes = [
-    { value: 'general', label: 'General' },
-    { value: 'compras', label: 'Caja Compras' },
-    { value: 'campo', label: 'Caja Campo' },
-    { value: 'musica', label: 'Caja Música' }
-  ];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -279,8 +277,11 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, mode, on
                     borderColor: 'oklch(0.90 0.05 270)'
                   }}
                 >
+                  <option value="">Seleccionar caja</option>
                   {cashBoxes.map(box => (
-                    <option key={box.value} value={box.value}>{box.label}</option>
+                    <option key={box.id} value={box.name}>
+                      {box.name.charAt(0).toUpperCase() + box.name.slice(1)}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -300,8 +301,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, mode, on
                 >
                   <option value="">Seleccionar categoría</option>
                   {categories.map(category => (
-                    <option key={category} value={category}>
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    <option key={category.id} value={category.name}>
+                      {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
                     </option>
                   ))}
                 </select>

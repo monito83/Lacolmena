@@ -367,7 +367,7 @@ const FinancialModule: React.FC = () => {
 
             <button
               onClick={handleOpenCreateModal}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 waldorf-body-text"
+              className="px-4 py-2 bg-pink-300 text-gray-800 rounded-lg hover:bg-pink-400 transition-colors flex items-center gap-2 waldorf-body-text font-medium"
             >
               <Plus className="h-4 w-4" />
               Nueva Transacción
