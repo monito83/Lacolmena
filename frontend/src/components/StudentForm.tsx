@@ -37,7 +37,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ isOpen, onClose, onSave, stud
     first_name: '',
     last_name: '',
     birth_date: '',
-    gender: '',
+    gender: 'sin_definir',
     family_id: '',
     grade: '',
     enrollment_date: '',
@@ -56,7 +56,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ isOpen, onClose, onSave, stud
         first_name: student.first_name || '',
         last_name: student.last_name || '',
         birth_date: student.birth_date || '',
-        gender: student.gender || '',
+        gender: student.gender || 'sin_definir',
         family_id: student.family_id || '',
         grade: student.grade || '',
         enrollment_date: student.enrollment_date || '',
@@ -70,7 +70,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ isOpen, onClose, onSave, stud
         first_name: '',
         last_name: '',
         birth_date: '',
-        gender: '',
+        gender: 'sin_definir',
         family_id: '',
         grade: '',
         enrollment_date: '',
@@ -127,7 +127,6 @@ const StudentForm: React.FC<StudentFormProps> = ({ isOpen, onClose, onSave, stud
       // Limpiar campos vacíos antes de enviar
       const cleanData = {
         ...formData,
-        gender: formData.gender && formData.gender.trim() !== '' ? formData.gender : undefined,
         grade: formData.grade && formData.grade.trim() !== '' ? formData.grade : undefined,
         medical_notes: formData.medical_notes && formData.medical_notes.trim() !== '' ? formData.medical_notes : undefined,
         special_needs: formData.special_needs && formData.special_needs.trim() !== '' ? formData.special_needs : undefined
@@ -288,7 +287,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ isOpen, onClose, onSave, stud
                     borderColor: 'oklch(0.90 0.05 270)'
                   }}
                 >
-                  <option value="">Seleccionar</option>
+                  <option value="sin_definir">Sin definir</option>
                   <option value="masculino">Masculino</option>
                   <option value="femenino">Femenino</option>
                   <option value="otro">Otro</option>
