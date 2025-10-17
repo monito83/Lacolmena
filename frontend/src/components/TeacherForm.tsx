@@ -34,7 +34,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
     email: '',
     phone: '',
     address: '',
-    specializations: [] as string[],
+    specializations: '' as string | string[],
     bio: '',
     photo_url: '',
     birth_date: '',
@@ -55,7 +55,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
         email: teacher.email || '',
         phone: teacher.phone || '',
         address: teacher.address || '',
-        specializations: teacher.specializations || [],
+        specializations: teacher.specializations || '',
         bio: teacher.bio || '',
         photo_url: teacher.photo_url || '',
         birth_date: teacher.birth_date || '',
@@ -121,10 +121,14 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
         ...formData,
         phone: formData.phone && formData.phone.trim() !== '' ? formData.phone : undefined,
         address: formData.address && formData.address.trim() !== '' ? formData.address : undefined,
-        specializations: formData.specializations && formData.specializations.length > 0 ? formData.specializations : undefined,
+        specializations: Array.isArray(formData.specializations) 
+          ? (formData.specializations.length > 0 ? formData.specializations : undefined)
+          : (formData.specializations && formData.specializations.trim() !== '' 
+              ? formData.specializations.split(',').map(s => s.trim()).filter(s => s !== '')
+              : undefined),
         bio: formData.bio && formData.bio.trim() !== '' ? formData.bio : undefined,
         photo_url: formData.photo_url && formData.photo_url.trim() !== '' ? formData.photo_url : undefined,
-        birth_date: formData.birth_date && formData.birth_date.trim() !== '' ? formData.birth_date : undefined,
+        birth_date: formData.birth_date && formData.birth_date.trim() !== '' ? formData.birth_date : null,
         assigned_grade: formData.assigned_grade && formData.assigned_grade.trim() !== '' ? formData.assigned_grade : undefined
       };
       
@@ -288,8 +292,14 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
                 </label>
                 <input
                   type="text"
-                  value={Array.isArray(formData.specializations) ? formData.specializations.join(', ') : formData.specializations || ''}
+                  value={Array.isArray(formData.specializations) ? formData.specializations.join(', ') : (formData.specializations || '')}
                   onChange={(e) => {
+                    const value = e.target.value;
+                    // Permitir escribir comas libremente
+                    handleInputChange('specializations', value);
+                  }}
+                  onBlur={(e) => {
+                    // Solo procesar el array cuando se pierde el foco
                     const value = e.target.value;
                     const specializations = value.split(',').map(s => s.trim()).filter(s => s !== '');
                     handleInputChange('specializations', specializations);
