@@ -10,7 +10,9 @@ import {
   Heart,
   GraduationCap,
   Tag,
-  Building2
+  Building2,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import UserHeader from './UserHeader';
@@ -19,8 +21,16 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
+interface NavigationItem {
+  name: string;
+  href?: string;
+  icon: React.ComponentType<any>;
+  submenu?: NavigationItem[];
+}
+
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set());
   const location = useLocation();
   const { user } = useAuth();
 
@@ -29,23 +39,49 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     return null;
   }
 
-        const navigation = [
-          { name: 'Panel Principal', href: '/', icon: Home },
-          { name: 'Familias', href: '/familias', icon: Users },
-          { name: 'Niños', href: '/estudiantes', icon: Users },
-          { name: 'Maestros', href: '/maestros', icon: GraduationCap },
-          { name: 'Académico', href: '/academico', icon: Users },
-          { name: 'Financiero', href: '/financiero', icon: DollarSign },
-          { name: 'Categorías', href: '/categorias', icon: Tag },
-          { name: 'Cajas', href: '/cajas', icon: Building2 },
-          { name: 'Administrativo', href: '/administrativo', icon: Settings },
-        ];
+  const navigation: NavigationItem[] = [
+    { name: 'Panel Principal', href: '/', icon: Home },
+    { name: 'Familias', href: '/familias', icon: Users },
+    { name: 'Niños', href: '/estudiantes', icon: Users },
+    { name: 'Maestros', href: '/maestros', icon: GraduationCap },
+    { 
+      name: 'Financiero', 
+      icon: DollarSign,
+      submenu: [
+        { name: 'Transacciones', href: '/financiero', icon: DollarSign },
+        { name: 'Categorías', href: '/categorias', icon: Tag },
+        { name: 'Cajas', href: '/cajas', icon: Building2 }
+      ]
+    },
+    { name: 'Académico', href: '/academico', icon: Users },
+    { name: 'Administrativo', href: '/administrativo', icon: Settings },
+  ];
 
   const isActive = (href: string) => {
     if (href === '/') {
       return location.pathname === '/';
     }
     return location.pathname.startsWith(href);
+  };
+
+  const toggleSubmenu = (menuName: string) => {
+    setExpandedMenus(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(menuName)) {
+        newSet.delete(menuName);
+      } else {
+        newSet.add(menuName);
+      }
+      return newSet;
+    });
+  };
+
+  const isSubmenuExpanded = (menuName: string) => {
+    return expandedMenus.has(menuName);
+  };
+
+  const isParentActive = (submenu: NavigationItem[]) => {
+    return submenu.some(item => item.href && isActive(item.href));
   };
 
   return (
@@ -68,23 +104,69 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
           <nav className="flex-1 space-y-1 px-4 py-4">
             {navigation.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setSidebarOpen(false)}
-                         className={`group flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-colors ${
-                           isActive(item.href)
-                             ? 'text-pink-600'
-                             : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
-                         }`}
-                         style={isActive(item.href) ? { backgroundColor: 'oklch(0.92 0.05 330)' } : {}}
-                >
-                  <Icon className="mr-3 h-5 w-5 flex-shrink-0" />
-                  {item.name}
-                </Link>
-              );
+              if (item.submenu) {
+                return (
+                  <div key={item.name}>
+                    <button
+                      onClick={() => toggleSubmenu(item.name)}
+                      className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-colors ${
+                        isParentActive(item.submenu)
+                          ? 'text-pink-600'
+                          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                      }`}
+                      style={isParentActive(item.submenu) ? { backgroundColor: 'oklch(0.92 0.05 330)' } : {}}
+                    >
+                      <div className="flex items-center">
+                        <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
+                        {item.name}
+                      </div>
+                      {isSubmenuExpanded(item.name) ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </button>
+                    {isSubmenuExpanded(item.name) && (
+                      <div className="ml-6 mt-1 space-y-1">
+                        {item.submenu.map((subItem) => (
+                          <Link
+                            key={subItem.name}
+                            to={subItem.href!}
+                            onClick={() => setSidebarOpen(false)}
+                            className={`group flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-colors ${
+                              isActive(subItem.href!)
+                                ? 'text-pink-600'
+                                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                            }`}
+                            style={isActive(subItem.href!) ? { backgroundColor: 'oklch(0.92 0.05 330)' } : {}}
+                          >
+                            <subItem.icon className="mr-3 h-4 w-4 flex-shrink-0" />
+                            {subItem.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              } else {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href!}
+                    onClick={() => setSidebarOpen(false)}
+                    className={`group flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-colors ${
+                      isActive(item.href!)
+                        ? 'text-pink-600'
+                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                    }`}
+                    style={isActive(item.href!) ? { backgroundColor: 'oklch(0.92 0.05 330)' } : {}}
+                  >
+                    <Icon className="mr-3 h-5 w-5 flex-shrink-0" />
+                    {item.name}
+                  </Link>
+                );
+              }
             })}
           </nav>
         </div>
@@ -101,22 +183,67 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
           <nav className="flex-1 space-y-1 px-4 py-4">
             {navigation.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                         className={`group flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-colors ${
-                           isActive(item.href)
-                             ? 'text-pink-600'
-                             : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
-                         }`}
-                         style={isActive(item.href) ? { backgroundColor: 'oklch(0.92 0.05 330)' } : {}}
-                >
-                  <Icon className="mr-3 h-5 w-5 flex-shrink-0" />
-                  {item.name}
-                </Link>
-              );
+              if (item.submenu) {
+                return (
+                  <div key={item.name}>
+                    <button
+                      onClick={() => toggleSubmenu(item.name)}
+                      className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-colors ${
+                        isParentActive(item.submenu)
+                          ? 'text-pink-600'
+                          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                      }`}
+                      style={isParentActive(item.submenu) ? { backgroundColor: 'oklch(0.92 0.05 330)' } : {}}
+                    >
+                      <div className="flex items-center">
+                        <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
+                        {item.name}
+                      </div>
+                      {isSubmenuExpanded(item.name) ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </button>
+                    {isSubmenuExpanded(item.name) && (
+                      <div className="ml-6 mt-1 space-y-1">
+                        {item.submenu.map((subItem) => (
+                          <Link
+                            key={subItem.name}
+                            to={subItem.href!}
+                            className={`group flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-colors ${
+                              isActive(subItem.href!)
+                                ? 'text-pink-600'
+                                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                            }`}
+                            style={isActive(subItem.href!) ? { backgroundColor: 'oklch(0.92 0.05 330)' } : {}}
+                          >
+                            <subItem.icon className="mr-3 h-4 w-4 flex-shrink-0" />
+                            {subItem.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              } else {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href!}
+                    className={`group flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-colors ${
+                      isActive(item.href!)
+                        ? 'text-pink-600'
+                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                    }`}
+                    style={isActive(item.href!) ? { backgroundColor: 'oklch(0.92 0.05 330)' } : {}}
+                  >
+                    <Icon className="mr-3 h-5 w-5 flex-shrink-0" />
+                    {item.name}
+                  </Link>
+                );
+              }
             })}
           </nav>
           <div className="flex-shrink-0 p-4 border-t border-gray-200">
