@@ -7,6 +7,7 @@ interface Teacher {
   last_name: string;
   email: string;
   phone?: string;
+  address?: string;
   specialization?: string;
   bio?: string;
   photo_url?: string;
@@ -31,6 +32,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
     last_name: '',
     email: '',
     phone: '',
+    address: '',
     specialization: '',
     bio: '',
     photo_url: '',
@@ -51,6 +53,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
         last_name: teacher.last_name || '',
         email: teacher.email || '',
         phone: teacher.phone || '',
+        address: teacher.address || '',
         specialization: teacher.specialization || '',
         bio: teacher.bio || '',
         photo_url: teacher.photo_url || '',
@@ -116,6 +119,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
       const cleanData = {
         ...formData,
         phone: formData.phone && formData.phone.trim() !== '' ? formData.phone : undefined,
+        address: formData.address && formData.address.trim() !== '' ? formData.address : undefined,
         specialization: formData.specialization && formData.specialization.trim() !== '' ? formData.specialization : undefined,
         bio: formData.bio && formData.bio.trim() !== '' ? formData.bio : undefined,
         photo_url: formData.photo_url && formData.photo_url.trim() !== '' ? formData.photo_url : undefined,
@@ -257,6 +261,23 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
                   placeholder="+54 11 1234-5678"
                 />
               </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Dirección
+              </label>
+              <input
+                type="text"
+                value={formData.address}
+                onChange={(e) => handleInputChange('address', e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                style={{ 
+                  backgroundColor: 'oklch(0.99 0.01 270)',
+                  borderColor: 'oklch(0.90 0.05 270)'
+                }}
+                placeholder="Dirección completa"
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
