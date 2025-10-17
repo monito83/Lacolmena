@@ -29,7 +29,6 @@ SELECT
     last_name,
     email,
     phone,
-    address,
     specialization,
     assigned_grade,
     hire_date,
