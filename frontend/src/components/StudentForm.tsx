@@ -127,10 +127,10 @@ const StudentForm: React.FC<StudentFormProps> = ({ isOpen, onClose, onSave, stud
       // Limpiar campos vacíos antes de enviar
       const cleanData = {
         ...formData,
-        gender: formData.gender || undefined,
-        grade: formData.grade || undefined,
-        medical_notes: formData.medical_notes || undefined,
-        special_needs: formData.special_needs || undefined
+        gender: formData.gender && formData.gender.trim() !== '' ? formData.gender : undefined,
+        grade: formData.grade && formData.grade.trim() !== '' ? formData.grade : undefined,
+        medical_notes: formData.medical_notes && formData.medical_notes.trim() !== '' ? formData.medical_notes : undefined,
+        special_needs: formData.special_needs && formData.special_needs.trim() !== '' ? formData.special_needs : undefined
       };
       
       await onSave(cleanData);
