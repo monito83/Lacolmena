@@ -42,12 +42,39 @@ const FinancialModule: React.FC = () => {
     start_date: '',
     end_date: ''
   });
+  const [categories, setCategories] = useState<Array<{id: string, name: string, color: string}>>([]);
+  const [cashBoxes, setCashBoxes] = useState<Array<{id: string, name: string, color: string}>>([]);
 
   const apiUrl = import.meta.env.VITE_API_URL || '';
 
   useEffect(() => {
     fetchTransactions();
   }, [filters]);
+
+  useEffect(() => {
+    // Cargar categorías y cajas para los filtros
+    const loadFilterData = async () => {
+      try {
+        // Cargar categorías
+        const categoriesResponse = await fetch(`${apiUrl}/transaction-categories?is_active=true`);
+        if (categoriesResponse.ok) {
+          const categoriesData = await categoriesResponse.json();
+          setCategories(categoriesData);
+        }
+
+        // Cargar cajas
+        const cashBoxesResponse = await fetch(`${apiUrl}/cash-boxes?is_active=true`);
+        if (cashBoxesResponse.ok) {
+          const cashBoxesData = await cashBoxesResponse.json();
+          setCashBoxes(cashBoxesData);
+        }
+      } catch (error) {
+        console.error('Error cargando datos para filtros:', error);
+      }
+    };
+
+    loadFilterData();
+  }, [apiUrl]);
 
   const fetchTransactions = async () => {
     try {
@@ -303,10 +330,11 @@ const FinancialModule: React.FC = () => {
                 }}
               >
                 <option value="">Todas las cajas</option>
-                <option value="general">General</option>
-                <option value="compras">Compras</option>
-                <option value="campo">Campo</option>
-                <option value="musica">Música</option>
+                {cashBoxes.map(box => (
+                  <option key={box.id} value={box.name}>
+                    {box.name.charAt(0).toUpperCase() + box.name.slice(1)}
+                  </option>
+                ))}
               </select>
 
               <select
@@ -321,6 +349,23 @@ const FinancialModule: React.FC = () => {
                 <option value="">Todas las monedas</option>
                 <option value="ARS">Pesos</option>
                 <option value="USD">Dólares</option>
+              </select>
+
+              <select
+                value={filters.category}
+                onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
+                className="px-3 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                style={{ 
+                  backgroundColor: 'oklch(0.99 0.01 270)',
+                  borderColor: 'oklch(0.90 0.05 270)'
+                }}
+              >
+                <option value="">Todas las categorías</option>
+                {categories.map(category => (
+                  <option key={category.id} value={category.name}>
+                    {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+                  </option>
+                ))}
               </select>
 
               <input
