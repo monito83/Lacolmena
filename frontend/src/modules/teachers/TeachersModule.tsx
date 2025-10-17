@@ -12,6 +12,7 @@ import {
   GraduationCap,
   Users
 } from 'lucide-react';
+import TeacherForm from '../../components/TeacherForm';
 
 interface Teacher {
   id: string;
@@ -20,12 +21,11 @@ interface Teacher {
   email: string;
   phone?: string;
   address?: string;
-  birth_date?: string;
-  hire_date?: string;
   specialization?: string;
-  grade_level?: string;
   bio?: string;
   photo_url?: string;
+  birth_date?: string;
+  assigned_grade?: string;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -36,6 +36,9 @@ const TeachersModule: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [showActiveOnly, setShowActiveOnly] = useState(true);
+  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
+  const [showTeacherModal, setShowTeacherModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     loadTeachers();
@@ -94,6 +97,77 @@ const TeachersModule: React.FC = () => {
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+
+  const handleCreateTeacher = async (teacherData: Omit<Teacher, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const response = await fetch(`${apiUrl}/teachers`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(teacherData)
+      });
+
+      if (response.ok) {
+        loadTeachers();
+        setShowCreateModal(false);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al crear maestro');
+      }
+    } catch (error) {
+      console.error('Error al crear maestro:', error);
+      throw error;
+    }
+  };
+
+  const handleEditTeacher = async (teacherData: Omit<Teacher, 'id' | 'created_at' | 'updated_at'>) => {
+    if (!selectedTeacher) return;
+
+    try {
+      const token = localStorage.getItem('authToken');
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const response = await fetch(`${apiUrl}/teachers?id=${selectedTeacher.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(teacherData)
+      });
+
+      if (response.ok) {
+        loadTeachers();
+        setShowTeacherModal(false);
+        setSelectedTeacher(null);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al actualizar maestro');
+      }
+    } catch (error) {
+      console.error('Error al actualizar maestro:', error);
+      throw error;
+    }
+  };
+
+  const handleOpenEditModal = (teacher: Teacher) => {
+    setSelectedTeacher(teacher);
+    setShowTeacherModal(true);
+  };
+
+  const handleOpenCreateModal = () => {
+    setSelectedTeacher(null);
+    setShowCreateModal(true);
+  };
+
+  const handleCloseModals = () => {
+    setShowTeacherModal(false);
+    setShowCreateModal(false);
+    setSelectedTeacher(null);
   };
 
   const getStatusColor = (isActive: boolean) => {
@@ -176,6 +250,7 @@ const TeachersModule: React.FC = () => {
             </label>
 
             <button
+              onClick={handleOpenCreateModal}
               className="px-4 py-2 rounded-lg text-white font-medium waldorf-title flex items-center space-x-2 hover:opacity-90 transition-opacity"
               style={{ backgroundColor: 'oklch(0.60 0.15 270)' }}
             >
@@ -264,7 +339,7 @@ const TeachersModule: React.FC = () => {
                     <Users className="h-4 w-4" style={{ color: 'oklch(0.60 0.10 166.78)' }} />
                     <div>
                       <p className="waldorf-body-text text-xs opacity-75">Grado</p>
-                      <p className="waldorf-title text-sm">{teacher.grade_level || 'N/A'}</p>
+                      <p className="waldorf-title text-sm">{teacher.assigned_grade || 'N/A'}</p>
                     </div>
                   </div>
                 </div>
@@ -285,6 +360,7 @@ const TeachersModule: React.FC = () => {
                     <Eye className="h-4 w-4" style={{ color: 'oklch(0.60 0.10 240)' }} />
                   </button>
                   <button
+                    onClick={() => handleOpenEditModal(teacher)}
                     className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
                     title="Editar"
                   >
@@ -303,6 +379,24 @@ const TeachersModule: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Modales */}
+      {showCreateModal && (
+        <TeacherForm
+          mode="create"
+          onSave={handleCreateTeacher}
+          onClose={handleCloseModals}
+        />
+      )}
+
+      {showTeacherModal && selectedTeacher && (
+        <TeacherForm
+          teacher={selectedTeacher}
+          mode="edit"
+          onSave={handleEditTeacher}
+          onClose={handleCloseModals}
+        />
+      )}
     </div>
   );
 };

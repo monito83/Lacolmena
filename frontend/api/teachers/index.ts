@@ -69,9 +69,9 @@ async function handleGet(req: VercelRequest, res: VercelResponse, supabase: any)
 async function handlePost(req: VercelRequest, res: VercelResponse, supabase: any) {
   const teacherData = req.body;
 
-  // Validación básica
+  // Validación de campos requeridos
   if (!teacherData.first_name || !teacherData.last_name || !teacherData.email) {
-    res.status(400).json({ error: 'Faltan campos requeridos' });
+    res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido y email' });
     return;
   }
 
@@ -83,7 +83,11 @@ async function handlePost(req: VercelRequest, res: VercelResponse, supabase: any
 
   if (error) {
     console.error('Error al crear maestro:', error);
-    res.status(500).json({ error: 'Error al crear maestro' });
+    res.status(500).json({ 
+      error: 'Error al crear maestro',
+      details: error.message,
+      code: error.code
+    });
     return;
   }
 
@@ -99,6 +103,12 @@ async function handlePut(req: VercelRequest, res: VercelResponse, supabase: any)
     return;
   }
 
+  // Validación de campos requeridos
+  if (!teacherData.first_name || !teacherData.last_name || !teacherData.email) {
+    res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido y email' });
+    return;
+  }
+
   const { data: teacher, error } = await supabase
     .from('teachers')
     .update(teacherData)
@@ -108,7 +118,11 @@ async function handlePut(req: VercelRequest, res: VercelResponse, supabase: any)
 
   if (error) {
     console.error('Error al actualizar maestro:', error);
-    res.status(500).json({ error: 'Error al actualizar maestro' });
+    res.status(500).json({ 
+      error: 'Error al actualizar maestro',
+      details: error.message,
+      code: error.code
+    });
     return;
   }
 
@@ -131,7 +145,11 @@ async function handleDelete(req: VercelRequest, res: VercelResponse, supabase: a
 
   if (error) {
     console.error('Error al desactivar maestro:', error);
-    res.status(500).json({ error: 'Error al desactivar maestro' });
+    res.status(500).json({ 
+      error: 'Error al desactivar maestro',
+      details: error.message,
+      code: error.code
+    });
     return;
   }
 
