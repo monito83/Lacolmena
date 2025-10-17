@@ -2,7 +2,7 @@
 -- Ejecutar en Supabase SQL Editor
 
 -- Verificar la restricción actual
-SELECT conname, consrc 
+SELECT conname, pg_get_constraintdef(oid) as definition
 FROM pg_constraint 
 WHERE conname = 'students_gender_check';
 
@@ -14,7 +14,7 @@ ALTER TABLE students ADD CONSTRAINT students_gender_check
 CHECK (gender IS NULL OR gender IN ('masculino', 'femenino', 'otro'));
 
 -- Verificar que la nueva restricción se creó correctamente
-SELECT conname, consrc 
+SELECT conname, pg_get_constraintdef(oid) as definition
 FROM pg_constraint 
 WHERE conname = 'students_gender_check';
 
