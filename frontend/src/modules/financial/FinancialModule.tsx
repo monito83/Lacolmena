@@ -38,7 +38,9 @@ const FinancialModule: React.FC = () => {
     transaction_type: '',
     cash_box: '',
     category: '',
-    currency: ''
+    currency: '',
+    start_date: '',
+    end_date: ''
   });
 
   const apiUrl = import.meta.env.VITE_API_URL || '';
@@ -57,6 +59,8 @@ const FinancialModule: React.FC = () => {
       if (filters.cash_box) params.append('cash_box', filters.cash_box);
       if (filters.category) params.append('category', filters.category);
       if (filters.currency) params.append('currency', filters.currency);
+      if (filters.start_date) params.append('start_date', filters.start_date);
+      if (filters.end_date) params.append('end_date', filters.end_date);
 
       const response = await fetch(`${apiUrl}/transactions?${params}`);
       if (!response.ok) throw new Error('Error al cargar transacciones');
@@ -274,7 +278,7 @@ const FinancialModule: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <select
                 value={filters.transaction_type}
                 onChange={(e) => setFilters(prev => ({ ...prev, transaction_type: e.target.value }))}
@@ -318,6 +322,47 @@ const FinancialModule: React.FC = () => {
                 <option value="ARS">Pesos</option>
                 <option value="USD">Dólares</option>
               </select>
+
+              <input
+                type="date"
+                value={filters.start_date}
+                onChange={(e) => setFilters(prev => ({ ...prev, start_date: e.target.value }))}
+                className="px-3 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                style={{ 
+                  backgroundColor: 'oklch(0.99 0.01 270)',
+                  borderColor: 'oklch(0.90 0.05 270)'
+                }}
+                placeholder="Desde"
+                title="Fecha desde"
+              />
+
+              <input
+                type="date"
+                value={filters.end_date}
+                onChange={(e) => setFilters(prev => ({ ...prev, end_date: e.target.value }))}
+                className="px-3 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                style={{ 
+                  backgroundColor: 'oklch(0.99 0.01 270)',
+                  borderColor: 'oklch(0.90 0.05 270)'
+                }}
+                placeholder="Hasta"
+                title="Fecha hasta"
+              />
+
+              <button
+                onClick={() => setFilters({
+                  transaction_type: '',
+                  cash_box: '',
+                  category: '',
+                  currency: '',
+                  start_date: '',
+                  end_date: ''
+                })}
+                className="px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors waldorf-body-text"
+                title="Limpiar filtros"
+              >
+                Limpiar
+              </button>
             </div>
 
             <button
