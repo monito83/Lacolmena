@@ -25,6 +25,7 @@ interface Teacher {
   bio?: string;
   photo_url?: string;
   birth_date?: string;
+  hire_date: string;
   assigned_grade?: string;
   is_active: boolean;
   created_at: string;

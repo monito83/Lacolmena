@@ -70,8 +70,8 @@ async function handlePost(req: VercelRequest, res: VercelResponse, supabase: any
   const teacherData = req.body;
 
   // Validación de campos requeridos
-  if (!teacherData.first_name || !teacherData.last_name || !teacherData.email) {
-    res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido y email' });
+  if (!teacherData.first_name || !teacherData.last_name || !teacherData.email || !teacherData.hire_date) {
+    res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido, email y fecha de contratación' });
     return;
   }
 
@@ -104,8 +104,8 @@ async function handlePut(req: VercelRequest, res: VercelResponse, supabase: any)
   }
 
   // Validación de campos requeridos
-  if (!teacherData.first_name || !teacherData.last_name || !teacherData.email) {
-    res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido y email' });
+  if (!teacherData.first_name || !teacherData.last_name || !teacherData.email || !teacherData.hire_date) {
+    res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido, email y fecha de contratación' });
     return;
   }
 

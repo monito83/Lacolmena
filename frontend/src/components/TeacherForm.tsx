@@ -12,6 +12,7 @@ interface Teacher {
   bio?: string;
   photo_url?: string;
   birth_date?: string;
+  hire_date: string;
   assigned_grade?: string;
   is_active: boolean;
   created_at: string;
@@ -36,6 +37,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
     bio: '',
     photo_url: '',
     birth_date: '',
+    hire_date: '',
     assigned_grade: '',
     is_active: true
   });
@@ -56,6 +58,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
         bio: teacher.bio || '',
         photo_url: teacher.photo_url || '',
         birth_date: teacher.birth_date || '',
+        hire_date: teacher.hire_date || '',
         assigned_grade: teacher.assigned_grade || '',
         is_active: teacher.is_active
       });
@@ -92,6 +95,10 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
       newErrors.email = 'El email es requerido';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'El email no es válido';
+    }
+
+    if (!formData.hire_date.trim()) {
+      newErrors.hire_date = 'La fecha de contratación es requerida';
     }
 
     setErrors(newErrors);
@@ -307,20 +314,43 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Fecha de Nacimiento
-              </label>
-              <input
-                type="date"
-                value={formData.birth_date}
-                onChange={(e) => handleInputChange('birth_date', e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent"
-                style={{ 
-                  backgroundColor: 'oklch(0.99 0.01 270)',
-                  borderColor: 'oklch(0.90 0.05 270)'
-                }}
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Fecha de Nacimiento
+                </label>
+                <input
+                  type="date"
+                  value={formData.birth_date}
+                  onChange={(e) => handleInputChange('birth_date', e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                  style={{ 
+                    backgroundColor: 'oklch(0.99 0.01 270)',
+                    borderColor: 'oklch(0.90 0.05 270)'
+                  }}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Fecha de Contratación *
+                </label>
+                <input
+                  type="date"
+                  value={formData.hire_date}
+                  onChange={(e) => handleInputChange('hire_date', e.target.value)}
+                  className={`w-full px-4 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent ${
+                    errors.hire_date ? 'border-red-500' : ''
+                  }`}
+                  style={{ 
+                    backgroundColor: 'oklch(0.99 0.01 270)',
+                    borderColor: errors.hire_date ? '#ef4444' : 'oklch(0.90 0.05 270)'
+                  }}
+                />
+                {errors.hire_date && (
+                  <p className="text-red-500 text-sm mt-1">{errors.hire_date}</p>
+                )}
+              </div>
             </div>
 
             <div>
