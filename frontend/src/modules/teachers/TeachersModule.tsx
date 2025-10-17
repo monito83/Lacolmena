@@ -16,19 +16,18 @@ import TeacherForm from '../../components/TeacherForm';
 
 interface Teacher {
   id: string;
+  user_id?: string;
   first_name: string;
   last_name: string;
-  email: string;
   phone?: string;
-  address?: string;
-  specializations?: string[]; // Corregido: con 's' al final
+  email?: string; // Es nullable en la BD
+  specializations?: string[]; // ARRAY en la BD
+  hire_date: string;
+  is_active: boolean;
   bio?: string;
   photo_url?: string;
-  birth_date?: string;
-  hire_date: string;
+  address?: string;
   assigned_grade?: string;
-  user_id?: string; // Agregado campo user_id
-  is_active: boolean;
   created_at: string;
   updated_at: string;
 }

@@ -69,11 +69,11 @@ async function handleGet(req: VercelRequest, res: VercelResponse, supabase: any)
 async function handlePost(req: VercelRequest, res: VercelResponse, supabase: any) {
   const teacherData = req.body;
 
-  // Validación de campos requeridos
-  if (!teacherData.first_name || !teacherData.last_name || !teacherData.email || !teacherData.hire_date) {
-    res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido, email y fecha de contratación' });
-    return;
-  }
+        // Validación de campos requeridos
+        if (!teacherData.first_name || !teacherData.last_name || !teacherData.hire_date) {
+          res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido y fecha de contratación' });
+          return;
+        }
 
   const { data: teacher, error } = await supabase
     .from('teachers')
@@ -103,11 +103,11 @@ async function handlePut(req: VercelRequest, res: VercelResponse, supabase: any)
     return;
   }
 
-  // Validación de campos requeridos
-  if (!teacherData.first_name || !teacherData.last_name || !teacherData.email || !teacherData.hire_date) {
-    res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido, email y fecha de contratación' });
-    return;
-  }
+        // Validación de campos requeridos
+        if (!teacherData.first_name || !teacherData.last_name || !teacherData.hire_date) {
+          res.status(400).json({ error: 'Datos requeridos faltantes: nombre, apellido y fecha de contratación' });
+          return;
+        }
 
   const { data: teacher, error } = await supabase
     .from('teachers')

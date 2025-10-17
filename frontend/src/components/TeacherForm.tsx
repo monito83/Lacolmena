@@ -3,19 +3,18 @@ import { X, Save, User, GraduationCap } from 'lucide-react';
 
 interface Teacher {
   id: string;
+  user_id?: string;
   first_name: string;
   last_name: string;
-  email: string;
   phone?: string;
-  address?: string;
-  specializations?: string[]; // Corregido: con 's' al final
+  email?: string; // Es nullable en la BD
+  specializations?: string[]; // ARRAY en la BD
+  hire_date: string;
+  is_active: boolean;
   bio?: string;
   photo_url?: string;
-  birth_date?: string;
-  hire_date: string;
+  address?: string;
   assigned_grade?: string;
-  user_id?: string; // Agregado campo user_id
-  is_active: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -37,7 +36,6 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
     specializations: '' as string | string[],
     bio: '',
     photo_url: '',
-    birth_date: '',
     hire_date: '',
     assigned_grade: '',
     is_active: true
@@ -58,7 +56,6 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
         specializations: teacher.specializations || '',
         bio: teacher.bio || '',
         photo_url: teacher.photo_url || '',
-        birth_date: teacher.birth_date || '',
         hire_date: teacher.hire_date || '',
         assigned_grade: teacher.assigned_grade || '',
         is_active: teacher.is_active
@@ -92,9 +89,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
       newErrors.last_name = 'El apellido es requerido';
     }
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'El email es requerido';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    if (formData.email && formData.email.trim() !== '' && !/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'El email no es válido';
     }
 
@@ -128,7 +123,6 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
               : undefined),
         bio: formData.bio && formData.bio.trim() !== '' ? formData.bio : undefined,
         photo_url: formData.photo_url && formData.photo_url.trim() !== '' ? formData.photo_url : undefined,
-        birth_date: formData.birth_date && formData.birth_date.trim() !== '' ? formData.birth_date : undefined,
         assigned_grade: formData.assigned_grade && formData.assigned_grade.trim() !== '' ? formData.assigned_grade : undefined
       };
       
@@ -335,22 +329,6 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Fecha de Nacimiento
-                </label>
-                <input
-                  type="date"
-                  value={formData.birth_date}
-                  onChange={(e) => handleInputChange('birth_date', e.target.value)}
-                  className="w-full px-4 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent"
-                  style={{ 
-                    backgroundColor: 'oklch(0.99 0.01 270)',
-                    borderColor: 'oklch(0.90 0.05 270)'
-                  }}
-                />
-              </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Fecha de Contratación *
