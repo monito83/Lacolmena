@@ -15,9 +15,9 @@ ALTER TABLE students DROP CONSTRAINT IF EXISTS students_gender_check;
 ALTER TABLE students DROP CONSTRAINT IF EXISTS students_gender_check_new;
 ALTER TABLE students DROP CONSTRAINT IF EXISTS students_gender_flexible;
 
--- 3. Crear nueva restricción que incluye 'sin_definir'
+-- 3. Crear nueva restricción que incluye 'no_definido'
 ALTER TABLE students ADD CONSTRAINT students_gender_check_updated 
-CHECK (gender IS NULL OR gender IN ('masculino', 'femenino', 'otro', 'sin_definir'));
+CHECK (gender IS NULL OR gender IN ('masculino', 'femenino', 'otro', 'no_definido'));
 
 -- 4. Verificar que se creó correctamente
 SELECT 
@@ -28,9 +28,9 @@ FROM pg_constraint
 WHERE conrelid = 'students'::regclass
 AND conname = 'students_gender_check_updated';
 
--- 5. Probar que funciona con 'sin_definir'
+-- 5. Probar que funciona con 'no_definido'
 UPDATE students 
-SET gender = 'sin_definir' 
+SET gender = 'no_definido' 
 WHERE first_name = 'Ana' AND last_name = 'García';
 
 -- 6. Verificar que se actualizó
@@ -48,9 +48,9 @@ SELECT id, first_name, last_name, gender
 FROM students 
 WHERE first_name = 'Ana' AND last_name = 'García';
 
--- 9. Volver a 'sin_definir' para la prueba final
+-- 9. Volver a 'no_definido' para la prueba final
 UPDATE students 
-SET gender = 'sin_definir' 
+SET gender = 'no_definido' 
 WHERE first_name = 'Ana' AND last_name = 'García';
 
 -- 10. Verificación final
