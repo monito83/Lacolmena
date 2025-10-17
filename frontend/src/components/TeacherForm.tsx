@@ -128,7 +128,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
               : undefined),
         bio: formData.bio && formData.bio.trim() !== '' ? formData.bio : undefined,
         photo_url: formData.photo_url && formData.photo_url.trim() !== '' ? formData.photo_url : undefined,
-        birth_date: formData.birth_date && formData.birth_date.trim() !== '' ? formData.birth_date : null,
+        birth_date: formData.birth_date && formData.birth_date.trim() !== '' ? formData.birth_date : undefined,
         assigned_grade: formData.assigned_grade && formData.assigned_grade.trim() !== '' ? formData.assigned_grade : undefined
       };
       
