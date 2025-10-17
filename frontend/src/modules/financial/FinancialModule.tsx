@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Search, 
-  Filter, 
   Plus, 
   Edit, 
   Trash2, 
   DollarSign,
   TrendingUp,
   TrendingDown,
-  Calendar,
-  Building2,
-  Tag,
-  Eye
+  Building2
 } from 'lucide-react';
 import TransactionForm from '../../components/TransactionForm';
 
@@ -160,17 +156,6 @@ const FinancialModule: React.FC = () => {
     return type === 'income' ? 'oklch(0.50 0.15 140)' : 'oklch(0.60 0.15 30)';
   };
 
-  const getTotalIncome = () => {
-    return transactions
-      .filter(t => t.transaction_type === 'income')
-      .reduce((sum, t) => sum + t.amount, 0);
-  };
-
-  const getTotalExpenses = () => {
-    return transactions
-      .filter(t => t.transaction_type === 'expense')
-      .reduce((sum, t) => sum + t.amount, 0);
-  };
 
   const getTotalByCurrency = (currency: string) => {
     const income = transactions

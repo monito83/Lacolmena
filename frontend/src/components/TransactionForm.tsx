@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, DollarSign, Calendar, Building2, Tag } from 'lucide-react';
+import { X, Save, DollarSign } from 'lucide-react';
 
 interface Transaction {
   id: string;
