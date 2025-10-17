@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, User, Mail, Phone, MapPin, GraduationCap, Calendar } from 'lucide-react';
+import { X, Save, User, GraduationCap } from 'lucide-react';
 
 interface Teacher {
   id: string;
