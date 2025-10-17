@@ -127,6 +127,8 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
         assigned_grade: formData.assigned_grade && formData.assigned_grade.trim() !== '' ? formData.assigned_grade : undefined
       };
       
+      console.log('Datos a enviar:', cleanData);
+      
       await onSave(cleanData);
       onClose();
     } catch (error) {

@@ -148,7 +148,8 @@ const TeachersModule: React.FC = () => {
         setSelectedTeacher(null);
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al actualizar maestro');
+        console.error('Error response:', errorData);
+        throw new Error(errorData.error || `Error al actualizar maestro (${response.status})`);
       }
     } catch (error) {
       console.error('Error al actualizar maestro:', error);
