@@ -10,6 +10,7 @@ import FamiliesModule from './modules/families/FamiliesModule';
 import AcademicModule from './modules/academic/AcademicModule';
 import FinancialModule from './modules/financial/FinancialModule';
 import CategoriesModule from './modules/financial/CategoriesModule';
+import CashBoxesModule from './modules/financial/CashBoxesModule';
 import AdminModule from './modules/admin/AdminModule';
 import StudentsModule from './modules/students/StudentsModule';
 import TeachersModule from './modules/teachers/TeachersModule';
@@ -79,6 +80,11 @@ const AppRoutes: React.FC = () => {
                 <Route path="/categorias" element={
                   <ProtectedRoute>
                     <CategoriesModule />
+                  </ProtectedRoute>
+                } />
+                <Route path="/cajas" element={
+                  <ProtectedRoute>
+                    <CashBoxesModule />
                   </ProtectedRoute>
                 } />
                 <Route path="/academico" element={

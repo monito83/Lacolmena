@@ -9,7 +9,8 @@ import {
   X,
   Heart,
   GraduationCap,
-  Tag
+  Tag,
+  Building2
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import UserHeader from './UserHeader';
@@ -36,6 +37,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           { name: 'Académico', href: '/academico', icon: Users },
           { name: 'Financiero', href: '/financiero', icon: DollarSign },
           { name: 'Categorías', href: '/categorias', icon: Tag },
+          { name: 'Cajas', href: '/cajas', icon: Building2 },
           { name: 'Administrativo', href: '/administrativo', icon: Settings },
         ];
 
