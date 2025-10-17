@@ -8,7 +8,7 @@ interface Teacher {
   email: string;
   phone?: string;
   address?: string;
-  specialization?: string;
+  specialization?: string[]; // Cambiado a array
   bio?: string;
   photo_url?: string;
   birth_date?: string;
@@ -33,7 +33,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
     email: '',
     phone: '',
     address: '',
-    specialization: '',
+        specialization: [],
     bio: '',
     photo_url: '',
     birth_date: '',
@@ -54,7 +54,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
         email: teacher.email || '',
         phone: teacher.phone || '',
         address: teacher.address || '',
-        specialization: teacher.specialization || '',
+        specialization: teacher.specialization || [],
         bio: teacher.bio || '',
         photo_url: teacher.photo_url || '',
         birth_date: teacher.birth_date || '',
@@ -120,7 +120,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
         ...formData,
         phone: formData.phone && formData.phone.trim() !== '' ? formData.phone : undefined,
         address: formData.address && formData.address.trim() !== '' ? formData.address : undefined,
-        specialization: formData.specialization && formData.specialization.trim() !== '' ? formData.specialization : undefined,
+        specialization: formData.specialization && formData.specialization.length > 0 ? formData.specialization : undefined,
         bio: formData.bio && formData.bio.trim() !== '' ? formData.bio : undefined,
         photo_url: formData.photo_url && formData.photo_url.trim() !== '' ? formData.photo_url : undefined,
         birth_date: formData.birth_date && formData.birth_date.trim() !== '' ? formData.birth_date : undefined,
@@ -287,15 +287,22 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ teacher, mode, onSave, onClos
                 </label>
                 <input
                   type="text"
-                  value={formData.specialization}
-                  onChange={(e) => handleInputChange('specialization', e.target.value)}
+                  value={Array.isArray(formData.specialization) ? formData.specialization.join(', ') : formData.specialization || ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const specializations = value.split(',').map(s => s.trim()).filter(s => s !== '');
+                    handleInputChange('specialization', specializations);
+                  }}
                   className="w-full px-4 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent"
                   style={{ 
                     backgroundColor: 'oklch(0.99 0.01 270)',
                     borderColor: 'oklch(0.90 0.05 270)'
                   }}
-                  placeholder="Ej: Matemáticas, Lengua, etc."
+                  placeholder="Ej: Matemáticas, Ciencias, Lengua (separar con comas)"
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  Separa múltiples especializaciones con comas
+                </p>
               </div>
 
               <div>

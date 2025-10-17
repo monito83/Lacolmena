@@ -21,7 +21,7 @@ interface Teacher {
   email: string;
   phone?: string;
   address?: string;
-  specialization?: string;
+  specialization?: string[]; // Cambiado a array
   bio?: string;
   photo_url?: string;
   birth_date?: string;
@@ -299,7 +299,11 @@ const TeachersModule: React.FC = () => {
                     
                     <div className="flex items-center space-x-2 mb-3">
                       <GraduationCap className="h-4 w-4" style={{ color: 'oklch(0.60 0.10 270)' }} />
-                      <span className="waldorf-body-text text-sm">{teacher.specialization || 'Sin especialización'}</span>
+                      <span className="waldorf-body-text text-sm">
+                        {Array.isArray(teacher.specialization) 
+                          ? teacher.specialization.join(', ') 
+                          : teacher.specialization || 'Sin especialización'}
+                      </span>
                     </div>
                   </div>
                 </div>
