@@ -37,7 +37,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ isOpen, onClose, onSave, stud
     first_name: '',
     last_name: '',
     birth_date: '',
-    gender: 'no_definido',
+    gender: 'no_def',
     family_id: '',
     grade: '',
     enrollment_date: '',
@@ -56,7 +56,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ isOpen, onClose, onSave, stud
         first_name: student.first_name || '',
         last_name: student.last_name || '',
         birth_date: student.birth_date || '',
-        gender: student.gender || 'no_definido',
+        gender: student.gender || 'no_def',
         family_id: student.family_id || '',
         grade: student.grade || '',
         enrollment_date: student.enrollment_date || '',
@@ -70,7 +70,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ isOpen, onClose, onSave, stud
         first_name: '',
         last_name: '',
         birth_date: '',
-        gender: 'no_definido',
+        gender: 'no_def',
         family_id: '',
         grade: '',
         enrollment_date: '',
@@ -287,7 +287,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ isOpen, onClose, onSave, stud
                     borderColor: 'oklch(0.90 0.05 270)'
                   }}
                 >
-                  <option value="no_definido">Sin definir</option>
+                  <option value="no_def">Sin definir</option>
                   <option value="masculino">Masculino</option>
                   <option value="femenino">Femenino</option>
                   <option value="otro">Otro</option>
