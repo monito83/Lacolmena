@@ -81,7 +81,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .single();
 
       if (error) {
-        return res.status(500).json({ error: error.message });
+        console.error('Error al actualizar estudiante:', error);
+        return res.status(500).json({ 
+          error: 'Error al actualizar estudiante',
+          details: error.message,
+          code: error.code
+        });
       }
 
       res.status(200).json(student);
