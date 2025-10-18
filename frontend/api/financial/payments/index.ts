@@ -34,12 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       let queryBuilder = supabase
         .from('payments')
-        .select(`
-          *,
-          families!inner(family_name, contact_email),
-          students!inner(first_name, last_name, grade),
-          fraternal_commitments!inner(academic_year, agreed_amount)
-        `)
+        .select('*')
         .order('payment_date', { ascending: false });
 
       // Filtros
@@ -55,16 +50,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         queryBuilder = queryBuilder.eq('commitment_id', commitment_id);
       }
 
+      // Filtrar por año si se proporciona
       if (year) {
-        queryBuilder = queryBuilder.eq('year', year);
+        queryBuilder = queryBuilder.gte('payment_date', `${year}-01-01`)
+                                 .lt('payment_date', `${parseInt(year as string) + 1}-01-01`);
       }
 
-      if (month) {
-        queryBuilder = queryBuilder.eq('month', month);
-      }
-
-      if (status) {
-        queryBuilder = queryBuilder.eq('status', status);
+      // Filtrar por mes si se proporciona (requiere año también)
+      if (month && year) {
+        const monthStr = month.toString().padStart(2, '0');
+        queryBuilder = queryBuilder.gte('payment_date', `${year}-${monthStr}-01`)
+                                 .lt('payment_date', `${year}-${monthStr}-32`);
       }
 
       // Paginación
@@ -99,6 +95,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         amount,
         payment_date,
         payment_method,
+        cash_box_id,
         reference_number,
         month_paid,
         notes
@@ -162,6 +159,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       if (error) {
         throw error;
+      }
+
+      // Crear entrada en transacciones si se especifica una caja
+      if (cash_box_id) {
+        await supabase
+          .from('transactions')
+          .insert({
+            concept: `Pago cuota - ${student.first_name} ${student.last_name}`,
+            amount: parseFloat(amount),
+            currency: 'ARS',
+            transaction_type: 'income',
+            cash_box: cash_box_id,
+            category: 'cuotas',
+            description: `Pago de cuota mensual - Referencia: ${reference_number || 'Sin referencia'}`,
+            transaction_date: payment_date,
+            reference_number
+          });
       }
 
       // Actualizar el estado mensual de pago si se especifica
