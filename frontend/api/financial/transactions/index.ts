@@ -35,11 +35,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       let queryBuilder = supabase
         .from('transactions')
-        .select(`
-          *,
-          transaction_categories(name, color),
-          cash_boxes(name, color)
-        `)
+        .select('*')
         .order('transaction_date', { ascending: false });
 
       // Filtros
