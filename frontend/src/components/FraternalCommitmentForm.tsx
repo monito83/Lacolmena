@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, DollarSign, Users, GraduationCap } from 'lucide-react';
-import { FraternalCommitment } from '../types';
+import type { FraternalCommitment } from '../types';
 
 interface FraternalCommitmentFormProps {
   commitment?: FraternalCommitment | null;
