@@ -11,6 +11,7 @@ import {
   CheckCircle,
   Clock
 } from 'lucide-react';
+import PaymentForm from '../../../components/PaymentForm';
 
 interface Payment {
   id: string;
@@ -68,12 +69,16 @@ interface MonthlyPaymentStatus {
 const PaymentTrackingModule: React.FC = () => {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [monthlyStatus, setMonthlyStatus] = useState<MonthlyPaymentStatus[]>([]);
+  const [families, setFamilies] = useState<any[]>([]);
+  const [students, setStudents] = useState<any[]>([]);
+  const [commitments, setCommitments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const [selectedMonth, setSelectedMonth] = useState((new Date().getMonth() + 1).toString());
   const [selectedStatus, setSelectedStatus] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'payments' | 'monthly'>('payments');
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   // Cargar datos
   useEffect(() => {
@@ -86,7 +91,7 @@ const PaymentTrackingModule: React.FC = () => {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
 
-      const [paymentsRes, monthlyRes] = await Promise.all([
+      const [paymentsRes, monthlyRes, familiesRes, studentsRes, commitmentsRes] = await Promise.all([
         fetch(`${apiUrl}/financial/payments?year=${selectedYear}&month=${selectedMonth}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -94,6 +99,24 @@ const PaymentTrackingModule: React.FC = () => {
           }
         }),
         fetch(`${apiUrl}/financial/monthly-payment-status?year=${selectedYear}&month=${selectedMonth}${selectedStatus ? `&status=${selectedStatus}` : ''}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }),
+        fetch(`${apiUrl}/core/families?is_active=true`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }),
+        fetch(`${apiUrl}/core/students?is_active=true`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }),
+        fetch(`${apiUrl}/financial/fraternal-commitments`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -109,6 +132,21 @@ const PaymentTrackingModule: React.FC = () => {
       if (monthlyRes.ok) {
         const monthlyData = await monthlyRes.json();
         setMonthlyStatus(monthlyData.data || []);
+      }
+
+      if (familiesRes.ok) {
+        const familiesData = await familiesRes.json();
+        setFamilies(familiesData || []);
+      }
+
+      if (studentsRes.ok) {
+        const studentsData = await studentsRes.json();
+        setStudents(studentsData || []);
+      }
+
+      if (commitmentsRes.ok) {
+        const commitmentsData = await commitmentsRes.json();
+        setCommitments(commitmentsData.data || []);
       }
     } catch (error) {
       console.error('Error al cargar datos:', error);
@@ -174,6 +212,35 @@ const PaymentTrackingModule: React.FC = () => {
     }
   };
 
+  const handleSavePayment = async (paymentData: any) => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const token = localStorage.getItem('token');
+
+      const response = await fetch(`${apiUrl}/financial/payments`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(paymentData)
+      });
+
+      if (response.ok) {
+        // Recargar datos después de guardar
+        await loadData();
+        setShowPaymentForm(false);
+        alert('Pago registrado exitosamente');
+      } else {
+        const errorData = await response.json();
+        alert(`Error al registrar pago: ${errorData.error || 'Error desconocido'}`);
+      }
+    } catch (error) {
+      console.error('Error al registrar pago:', error);
+      alert('Error al registrar pago');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -190,7 +257,10 @@ const PaymentTrackingModule: React.FC = () => {
           <CreditCard className="w-8 h-8 text-purple-600" />
           <h1 className="text-2xl font-bold text-gray-900">Seguimiento de Pagos</h1>
         </div>
-        <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center space-x-2">
+        <button 
+          onClick={() => setShowPaymentForm(true)}
+          className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center space-x-2"
+        >
           <Plus className="w-4 h-4" />
           <span>Registrar Pago</span>
         </button>
@@ -452,6 +522,16 @@ const PaymentTrackingModule: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Formulario de Pago */}
+      <PaymentForm
+        isOpen={showPaymentForm}
+        onClose={() => setShowPaymentForm(false)}
+        onSave={handleSavePayment}
+        families={families}
+        students={students}
+        commitments={commitments}
+      />
     </div>
   );
 };
