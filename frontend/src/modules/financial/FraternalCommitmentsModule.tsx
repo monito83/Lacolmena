@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Users, 
   Plus, 
   Edit, 
   Eye, 
   Search, 
-  Filter,
   Calendar,
   DollarSign,
   Heart
 } from 'lucide-react';
-import { FraternalCommitment } from '../../types';
+import type { FraternalCommitment } from '../../types';
 import FraternalCommitmentForm from '../../components/FraternalCommitmentForm';
 
 const FraternalCommitmentsModule: React.FC = () => {
