@@ -8,6 +8,7 @@ interface PaymentFormProps {
   families: any[];
   students: any[];
   commitments: any[];
+  cashBoxes: any[];
 }
 
 const PaymentForm: React.FC<PaymentFormProps> = ({
@@ -16,7 +17,8 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   onSave,
   families,
   students,
-  commitments
+  commitments,
+  cashBoxes
 }) => {
   const [formData, setFormData] = useState({
     family_id: '',
@@ -25,6 +27,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     amount: '',
     payment_date: new Date().toISOString().split('T')[0],
     payment_method: 'efectivo',
+    cash_box_id: '',
     reference_number: '',
     month_paid: '',
     notes: ''
@@ -40,6 +43,11 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   // Filtrar compromisos cuando se selecciona un estudiante
   const filteredCommitments = commitments.filter(commitment => 
     commitment.student_id === formData.student_id
+  );
+
+  // Filtrar cajas basadas en el método de pago
+  const filteredCashBoxes = cashBoxes.filter(cashBox => 
+    cashBox.payment_method === formData.payment_method && cashBox.is_active
   );
 
   useEffect(() => {
@@ -85,6 +93,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     if (!formData.amount) newErrors.amount = 'Monto es requerido';
     if (!formData.payment_date) newErrors.payment_date = 'Fecha de pago es requerida';
     if (!formData.payment_method) newErrors.payment_method = 'Método de pago es requerido';
+    if (!formData.cash_box_id) newErrors.cash_box_id = 'Caja es requerida';
 
     // Validar que el monto sea un número positivo
     if (formData.amount && (isNaN(Number(formData.amount)) || Number(formData.amount) <= 0)) {
@@ -275,6 +284,37 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               />
               <p className="text-xs text-gray-500 mt-1">Formato: YYYY-MM (ej: 2024-03)</p>
             </div>
+          </div>
+
+          {/* Caja */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Caja *
+            </label>
+            <select
+              name="cash_box_id"
+              value={formData.cash_box_id}
+              onChange={handleInputChange}
+              disabled={!formData.payment_method}
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                errors.cash_box_id ? 'border-red-500' : 'border-gray-300'
+              } ${!formData.payment_method ? 'bg-gray-100' : ''}`}
+            >
+              <option value="">Seleccionar caja</option>
+              {filteredCashBoxes.map(cashBox => (
+                <option key={cashBox.id} value={cashBox.id}>
+                  {cashBox.name} ({cashBox.currency})
+                </option>
+              ))}
+            </select>
+            {errors.cash_box_id && (
+              <p className="text-red-500 text-xs mt-1">{errors.cash_box_id}</p>
+            )}
+            {formData.payment_method && filteredCashBoxes.length === 0 && (
+              <p className="text-yellow-600 text-xs mt-1">
+                No hay cajas configuradas para este método de pago. Configura cajas en el módulo de Cajas.
+              </p>
+            )}
           </div>
 
           {/* Número de Referencia */}

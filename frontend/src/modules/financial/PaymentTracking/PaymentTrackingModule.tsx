@@ -72,6 +72,7 @@ const PaymentTrackingModule: React.FC = () => {
   const [families, setFamilies] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
   const [commitments, setCommitments] = useState<any[]>([]);
+  const [cashBoxes, setCashBoxes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
@@ -91,7 +92,7 @@ const PaymentTrackingModule: React.FC = () => {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
 
-      const [paymentsRes, monthlyRes, familiesRes, studentsRes, commitmentsRes] = await Promise.all([
+      const [paymentsRes, monthlyRes, familiesRes, studentsRes, commitmentsRes, cashBoxesRes] = await Promise.all([
         fetch(`${apiUrl}/financial/payments?year=${selectedYear}&month=${selectedMonth}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -117,6 +118,12 @@ const PaymentTrackingModule: React.FC = () => {
           }
         }),
         fetch(`${apiUrl}/financial/fraternal-commitments`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }),
+        fetch(`${apiUrl}/financial/cash-boxes`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -147,6 +154,11 @@ const PaymentTrackingModule: React.FC = () => {
       if (commitmentsRes.ok) {
         const commitmentsData = await commitmentsRes.json();
         setCommitments(commitmentsData.data || []);
+      }
+
+      if (cashBoxesRes.ok) {
+        const cashBoxesData = await cashBoxesRes.json();
+        setCashBoxes(cashBoxesData.data || []);
       }
     } catch (error) {
       console.error('Error al cargar datos:', error);
@@ -531,6 +543,7 @@ const PaymentTrackingModule: React.FC = () => {
         families={families}
         students={students}
         commitments={commitments}
+        cashBoxes={cashBoxes}
       />
     </div>
   );

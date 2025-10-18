@@ -6,6 +6,9 @@ interface CashBox {
   name: string;
   description?: string;
   color: string;
+  currency: string;
+  box_type: 'caja' | 'banco' | 'tarjeta' | 'otros';
+  payment_method: 'efectivo' | 'transferencia' | 'cheque' | 'tarjeta';
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -23,6 +26,9 @@ const CashBoxForm: React.FC<CashBoxFormProps> = ({ cashBox, mode, onSave, onClos
     name: '',
     description: '',
     color: '#6B7280',
+    currency: 'ARS',
+    box_type: 'caja' as 'caja' | 'banco' | 'tarjeta' | 'otros',
+    payment_method: 'efectivo' as 'efectivo' | 'transferencia' | 'cheque' | 'tarjeta',
     is_active: true
   });
 
@@ -84,6 +90,18 @@ const CashBoxForm: React.FC<CashBoxFormProps> = ({ cashBox, mode, onSave, onClos
       newErrors.name = 'El nombre debe tener al menos 2 caracteres';
     }
 
+    if (!formData.currency) {
+      newErrors.currency = 'La moneda es requerida';
+    }
+
+    if (!formData.box_type) {
+      newErrors.box_type = 'El tipo de caja es requerido';
+    }
+
+    if (!formData.payment_method) {
+      newErrors.payment_method = 'El método de pago es requerido';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -101,6 +119,9 @@ const CashBoxForm: React.FC<CashBoxFormProps> = ({ cashBox, mode, onSave, onClos
         name: formData.name.trim(),
         description: formData.description && formData.description.trim() !== '' ? formData.description.trim() : undefined,
         color: formData.color,
+        currency: formData.currency,
+        box_type: formData.box_type,
+        payment_method: formData.payment_method,
         is_active: formData.is_active
       };
       
@@ -180,6 +201,84 @@ const CashBoxForm: React.FC<CashBoxFormProps> = ({ cashBox, mode, onSave, onClos
                 }}
                 placeholder="Descripción de la caja..."
               />
+            </div>
+
+            {/* Currency and Box Type */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Moneda *
+                </label>
+                <select
+                  value={formData.currency}
+                  onChange={(e) => handleInputChange('currency', e.target.value)}
+                  className={`w-full px-4 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent ${
+                    errors.currency ? 'border-red-500' : ''
+                  }`}
+                  style={{ 
+                    backgroundColor: 'oklch(0.99 0.01 270)',
+                    borderColor: errors.currency ? '#ef4444' : 'oklch(0.90 0.05 270)'
+                  }}
+                >
+                  <option value="ARS">ARS (Pesos Argentinos)</option>
+                  <option value="USD">USD (Dólares)</option>
+                  <option value="EUR">EUR (Euros)</option>
+                </select>
+                {errors.currency && (
+                  <p className="text-red-500 text-sm mt-1">{errors.currency}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Tipo de Caja *
+                </label>
+                <select
+                  value={formData.box_type}
+                  onChange={(e) => handleInputChange('box_type', e.target.value)}
+                  className={`w-full px-4 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent ${
+                    errors.box_type ? 'border-red-500' : ''
+                  }`}
+                  style={{ 
+                    backgroundColor: 'oklch(0.99 0.01 270)',
+                    borderColor: errors.box_type ? '#ef4444' : 'oklch(0.90 0.05 270)'
+                  }}
+                >
+                  <option value="caja">Caja (Efectivo)</option>
+                  <option value="banco">Banco</option>
+                  <option value="tarjeta">Tarjeta</option>
+                  <option value="otros">Otros</option>
+                </select>
+                {errors.box_type && (
+                  <p className="text-red-500 text-sm mt-1">{errors.box_type}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Payment Method */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Método de Pago *
+              </label>
+              <select
+                value={formData.payment_method}
+                onChange={(e) => handleInputChange('payment_method', e.target.value)}
+                className={`w-full px-4 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent ${
+                  errors.payment_method ? 'border-red-500' : ''
+                }`}
+                style={{ 
+                  backgroundColor: 'oklch(0.99 0.01 270)',
+                  borderColor: errors.payment_method ? '#ef4444' : 'oklch(0.90 0.05 270)'
+                }}
+              >
+                <option value="efectivo">Efectivo</option>
+                <option value="transferencia">Transferencia</option>
+                <option value="cheque">Cheque</option>
+                <option value="tarjeta">Tarjeta</option>
+              </select>
+              {errors.payment_method && (
+                <p className="text-red-500 text-sm mt-1">{errors.payment_method}</p>
+              )}
             </div>
 
             {/* Color */}
