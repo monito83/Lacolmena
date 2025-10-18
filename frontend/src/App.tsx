@@ -12,6 +12,7 @@ import FinancialModule from './modules/financial/FinancialModule';
 import CategoriesModule from './modules/financial/CategoriesModule';
 import CashBoxesModule from './modules/financial/CashBoxesModule';
 import FraternalCommitmentsModule from './modules/financial/FraternalCommitmentsModule';
+import PaymentTrackingModule from './modules/financial/PaymentTracking/PaymentTrackingModule';
 import AdminModule from './modules/admin/AdminModule';
 import StudentsModule from './modules/students/StudentsModule';
 import TeachersModule from './modules/teachers/TeachersModule';
@@ -91,6 +92,11 @@ const AppRoutes: React.FC = () => {
                 <Route path="/compromisos-fraternos" element={
                   <ProtectedRoute>
                     <FraternalCommitmentsModule />
+                  </ProtectedRoute>
+                } />
+                <Route path="/seguimiento-pagos" element={
+                  <ProtectedRoute>
+                    <PaymentTrackingModule />
                   </ProtectedRoute>
                 } />
                 <Route path="/academico" element={
