@@ -285,3 +285,4 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ category, mode, onSave, onC
 };
 
 export default CategoryForm;
+

@@ -69,3 +69,4 @@ FROM
 WHERE tc.constraint_type = 'FOREIGN KEY' 
 AND tc.table_schema='public'
 AND (tc.table_name = 'user_profiles' OR tc.table_name = 'users');
+

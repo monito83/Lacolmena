@@ -86,54 +86,85 @@ export type TeacherStatus = typeof TeacherStatus[keyof typeof TeacherStatus];
 // Sistema Fraterno de Aportes
 export interface FraternalCommitment {
   id: string;
-  familyId: string;
-  enrollmentAmount: number;
-  monthlyContribution: number;
-  commitmentDate: Date;
-  reviewDate: Date;
-  status: CommitmentStatus;
+  family_id: string;
+  student_id: string;
+  academic_year: string;
+  agreed_amount: number;
+  suggested_amount?: number;
+  payment_frequency: 'mensual' | 'trimestral' | 'anual';
+  status: 'activo' | 'suspendido' | 'modificado' | 'finalizado';
+  commitment_date: string;
+  review_date?: string;
   notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: string;
+  updated_at: string;
+  families?: {
+    family_name: string;
+    contact_email?: string;
+    contact_phone?: string;
+  };
+  students?: {
+    first_name: string;
+    last_name: string;
+    grade?: string;
+  };
 }
-
-export const CommitmentStatus = {
-  ACTIVE: 'active',
-  PAUSED: 'paused',
-  UNDER_REVIEW: 'under_review',
-  INCREASED: 'increased'
-} as const;
-
-export type CommitmentStatus = typeof CommitmentStatus[keyof typeof CommitmentStatus];
 
 export interface Payment {
   id: string;
-  familyId: string;
+  family_id: string;
+  student_id: string;
+  commitment_id?: string;
   amount: number;
-  type: PaymentType;
-  date: Date;
-  description: string;
-  status: PaymentStatus;
-  createdAt: Date;
-  updatedAt: Date;
+  payment_date: string;
+  payment_method?: 'efectivo' | 'transferencia' | 'cheque' | 'tarjeta';
+  reference_number?: string;
+  month_paid?: string; // Formato: "2024-03"
+  notes?: string;
+  recorded_by?: string;
+  created_at: string;
+  families?: {
+    family_name: string;
+    contact_email?: string;
+  };
+  students?: {
+    first_name: string;
+    last_name: string;
+    grade?: string;
+  };
+  fraternal_commitments?: {
+    academic_year: string;
+  };
 }
 
-export const PaymentType = {
-  ENROLLMENT: 'enrollment',
-  MONTHLY_CONTRIBUTION: 'monthly_contribution',
-  EXTRA_CONTRIBUTION: 'extra_contribution'
-} as const;
-
-export type PaymentType = typeof PaymentType[keyof typeof PaymentType];
-
-export const PaymentStatus = {
-  PENDING: 'pending',
-  PAID: 'paid',
-  OVERDUE: 'overdue',
-  CANCELLED: 'cancelled'
-} as const;
-
-export type PaymentStatus = typeof PaymentStatus[keyof typeof PaymentStatus];
+export interface MonthlyPaymentStatus {
+  id: string;
+  family_id: string;
+  student_id: string;
+  commitment_id: string;
+  year: number;
+  month: number;
+  expected_amount: number;
+  paid_amount: number;
+  status: 'pendiente' | 'parcial' | 'completo' | 'excedido';
+  due_date?: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+  families?: {
+    family_name: string;
+    contact_email?: string;
+  };
+  students?: {
+    first_name: string;
+    last_name: string;
+    grade?: string;
+  };
+  fraternal_commitments?: {
+    academic_year: string;
+    agreed_amount: number;
+  };
+}
 
 export interface Expense {
   id: string;

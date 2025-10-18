@@ -113,3 +113,4 @@ const handleClick = (event, _unusedParam) => { ... }; // ✅ Prefijo _ indica in
 
 **Última actualización**: 2025-10-16
 **Versión**: 1.0
+

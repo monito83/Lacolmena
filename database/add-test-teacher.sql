@@ -43,3 +43,4 @@ SELECT
   is_active
 FROM teachers 
 WHERE email = 'maria.rodriguez@lacolmena.edu';
+

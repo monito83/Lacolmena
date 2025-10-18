@@ -49,6 +49,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       icon: DollarSign,
       submenu: [
         { name: 'Transacciones', href: '/financiero', icon: DollarSign },
+        { name: 'Compromisos Fraternos', href: '/compromisos-fraternos', icon: Heart },
         { name: 'Categorías', href: '/categorias', icon: Tag },
         { name: 'Cajas', href: '/cajas', icon: Building2 }
       ]

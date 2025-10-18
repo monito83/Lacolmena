@@ -155,3 +155,4 @@ async function handleDelete(req: VercelRequest, res: VercelResponse, supabase: a
 
   res.status(200).json({ message: 'Categoría desactivada exitosamente' });
 }
+

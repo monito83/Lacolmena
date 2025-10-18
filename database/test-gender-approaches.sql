@@ -42,3 +42,4 @@ WHERE first_name = 'Ana' AND last_name = 'García';
 SELECT id, first_name, last_name, gender 
 FROM students 
 WHERE first_name = 'Ana' AND last_name = 'García';
+

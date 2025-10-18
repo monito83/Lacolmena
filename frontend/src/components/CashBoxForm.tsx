@@ -285,3 +285,4 @@ const CashBoxForm: React.FC<CashBoxFormProps> = ({ cashBox, mode, onSave, onClos
 };
 
 export default CashBoxForm;
+

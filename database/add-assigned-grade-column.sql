@@ -80,3 +80,4 @@ FROM information_schema.columns
 WHERE table_name = 'teachers' 
 AND table_schema = 'public'
 AND column_name = 'assigned_grade';
+
