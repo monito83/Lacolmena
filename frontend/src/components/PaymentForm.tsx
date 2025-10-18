@@ -60,6 +60,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         amount: '',
         payment_date: new Date().toISOString().split('T')[0],
         payment_method: 'efectivo',
+        cash_box_id: '',
         reference_number: '',
         month_paid: '',
         notes: ''

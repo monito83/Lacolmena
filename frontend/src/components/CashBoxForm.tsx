@@ -60,6 +60,9 @@ const CashBoxForm: React.FC<CashBoxFormProps> = ({ cashBox, mode, onSave, onClos
         name: cashBox.name || '',
         description: cashBox.description || '',
         color: cashBox.color || '#6B7280',
+        currency: cashBox.currency || 'ARS',
+        box_type: cashBox.box_type || 'caja',
+        payment_method: cashBox.payment_method || 'efectivo',
         is_active: cashBox.is_active !== undefined ? cashBox.is_active : true
       });
     }

@@ -13,6 +13,9 @@ interface CashBox {
   name: string;
   description?: string;
   color: string;
+  currency: string;
+  box_type: 'caja' | 'banco' | 'tarjeta' | 'otros';
+  payment_method: 'efectivo' | 'transferencia' | 'cheque' | 'tarjeta';
   is_active: boolean;
   created_at: string;
   updated_at: string;
