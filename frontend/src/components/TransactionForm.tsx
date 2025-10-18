@@ -63,13 +63,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ transaction, mode, on
 
   useEffect(() => {
     // Cargar categorías
-    fetch(`${apiUrl}/transaction-categories?is_active=true`)
+    fetch(`${apiUrl}/financial/transaction-categories?is_active=true`)
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => console.error('Error cargando categorías:', err));
 
     // Cargar cajas
-    fetch(`${apiUrl}/cash-boxes?is_active=true`)
+    fetch(`${apiUrl}/financial/cash-boxes?is_active=true`)
       .then(res => res.json())
       .then(data => setCashBoxes(data))
       .catch(err => console.error('Error cargando cajas:', err));

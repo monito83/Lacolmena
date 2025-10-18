@@ -41,7 +41,7 @@ const CashBoxesModule: React.FC = () => {
       if (searchTerm) params.append('search', searchTerm);
       if (filterActive !== null) params.append('is_active', filterActive.toString());
 
-      const response = await fetch(`${apiUrl}/cash-boxes?${params}`);
+      const response = await fetch(`${apiUrl}/financial/cash-boxes?${params}`);
       if (!response.ok) throw new Error('Error al cargar cajas');
       
       const data = await response.json();
@@ -55,7 +55,7 @@ const CashBoxesModule: React.FC = () => {
 
   const handleCreateCashBox = async (cashBoxData: Omit<CashBox, 'id' | 'created_at' | 'updated_at'>) => {
     try {
-      const response = await fetch(`${apiUrl}/cash-boxes`, {
+      const response = await fetch(`${apiUrl}/financial/cash-boxes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cashBoxData)
@@ -74,7 +74,7 @@ const CashBoxesModule: React.FC = () => {
     if (!selectedCashBox) return;
     
     try {
-      const response = await fetch(`${apiUrl}/cash-boxes?id=${selectedCashBox.id}`, {
+      const response = await fetch(`${apiUrl}/financial/cash-boxes?id=${selectedCashBox.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cashBoxData)
@@ -94,7 +94,7 @@ const CashBoxesModule: React.FC = () => {
     if (!confirm('¿Estás seguro de que quieres desactivar esta caja?')) return;
     
     try {
-      const response = await fetch(`${apiUrl}/cash-boxes?id=${cashBoxId}`, {
+      const response = await fetch(`${apiUrl}/financial/cash-boxes?id=${cashBoxId}`, {
         method: 'DELETE'
       });
 

@@ -59,7 +59,7 @@ const FamiliesModule: React.FC = () => {
       
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`${apiUrl}/families?${params}`, {
+      const response = await fetch(`${apiUrl}/core/families?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -87,7 +87,7 @@ const FamiliesModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`${apiUrl}/families?id=${familyId}`, {
+      const response = await fetch(`${apiUrl}/core/families?id=${familyId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -132,7 +132,7 @@ const FamiliesModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`${apiUrl}/families`, {
+      const response = await fetch(`${apiUrl}/core/families`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -158,7 +158,7 @@ const FamiliesModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`${apiUrl}/families?id=${selectedFamily.id}`, {
+      const response = await fetch(`${apiUrl}/core/families?id=${selectedFamily.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

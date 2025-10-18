@@ -75,7 +75,7 @@ const StudentsModule: React.FC = () => {
       
       const token = localStorage.getItem('token');
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
-      const response = await fetch(`${apiUrl}/students?${params}`, {
+      const response = await fetch(`${apiUrl}/core/students?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -99,7 +99,7 @@ const StudentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/families`, {
+      const response = await fetch(`${apiUrl}/core/families`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -123,7 +123,7 @@ const StudentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/students?id=${studentId}`, {
+      const response = await fetch(`${apiUrl}/core/students?id=${studentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -145,7 +145,7 @@ const StudentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/students`, {
+      const response = await fetch(`${apiUrl}/core/students`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -171,7 +171,7 @@ const StudentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/students?id=${selectedStudent.id}`, {
+      const response = await fetch(`${apiUrl}/core/students?id=${selectedStudent.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

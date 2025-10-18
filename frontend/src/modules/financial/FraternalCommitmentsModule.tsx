@@ -27,7 +27,7 @@ const FraternalCommitmentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/fraternal-commitments`, {
+      const response = await fetch(`${apiUrl}/financial/fraternal-commitments`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -54,13 +54,13 @@ const FraternalCommitmentsModule: React.FC = () => {
       const token = localStorage.getItem('token');
       
       const [familiesRes, studentsRes] = await Promise.all([
-        fetch(`${apiUrl}/families`, {
+        fetch(`${apiUrl}/core/families`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         }),
-        fetch(`${apiUrl}/students`, {
+        fetch(`${apiUrl}/core/students`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -91,7 +91,7 @@ const FraternalCommitmentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/fraternal-commitments`, {
+      const response = await fetch(`${apiUrl}/financial/fraternal-commitments`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -115,7 +115,7 @@ const FraternalCommitmentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/fraternal-commitments?id=${selectedCommitment?.id}`, {
+      const response = await fetch(`${apiUrl}/financial/fraternal-commitments?id=${selectedCommitment?.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

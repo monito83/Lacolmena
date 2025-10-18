@@ -56,14 +56,14 @@ const FinancialModule: React.FC = () => {
     const loadFilterData = async () => {
       try {
         // Cargar categorías
-        const categoriesResponse = await fetch(`${apiUrl}/transaction-categories?is_active=true`);
+        const categoriesResponse = await fetch(`${apiUrl}/financial/transaction-categories?is_active=true`);
         if (categoriesResponse.ok) {
           const categoriesData = await categoriesResponse.json();
           setCategories(categoriesData);
         }
 
         // Cargar cajas
-        const cashBoxesResponse = await fetch(`${apiUrl}/cash-boxes?is_active=true`);
+        const cashBoxesResponse = await fetch(`${apiUrl}/financial/cash-boxes?is_active=true`);
         if (cashBoxesResponse.ok) {
           const cashBoxesData = await cashBoxesResponse.json();
           setCashBoxes(cashBoxesData);
@@ -89,7 +89,7 @@ const FinancialModule: React.FC = () => {
       if (filters.start_date) params.append('start_date', filters.start_date);
       if (filters.end_date) params.append('end_date', filters.end_date);
 
-      const response = await fetch(`${apiUrl}/transactions?${params}`);
+      const response = await fetch(`${apiUrl}/financial/transactions?${params}`);
       if (!response.ok) throw new Error('Error al cargar transacciones');
       
       const data = await response.json();
@@ -103,7 +103,7 @@ const FinancialModule: React.FC = () => {
 
   const handleCreateTransaction = async (transactionData: Omit<Transaction, 'id' | 'created_at' | 'updated_at'>) => {
     try {
-      const response = await fetch(`${apiUrl}/transactions`, {
+      const response = await fetch(`${apiUrl}/financial/transactions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(transactionData)
@@ -122,7 +122,7 @@ const FinancialModule: React.FC = () => {
     if (!selectedTransaction) return;
     
     try {
-      const response = await fetch(`${apiUrl}/transactions?id=${selectedTransaction.id}`, {
+      const response = await fetch(`${apiUrl}/financial/transactions?id=${selectedTransaction.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(transactionData)
@@ -142,7 +142,7 @@ const FinancialModule: React.FC = () => {
     if (!confirm('¿Estás seguro de que quieres eliminar esta transacción?')) return;
     
     try {
-      const response = await fetch(`${apiUrl}/transactions?id=${transactionId}`, {
+      const response = await fetch(`${apiUrl}/financial/transactions?id=${transactionId}`, {
         method: 'DELETE'
       });
 

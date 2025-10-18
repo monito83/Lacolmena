@@ -42,7 +42,7 @@ const CategoriesModule: React.FC = () => {
       if (searchTerm) params.append('search', searchTerm);
       if (filterActive !== null) params.append('is_active', filterActive.toString());
 
-      const response = await fetch(`${apiUrl}/transaction-categories?${params}`);
+      const response = await fetch(`${apiUrl}/financial/transaction-categories?${params}`);
       if (!response.ok) throw new Error('Error al cargar categorías');
       
       const data = await response.json();
@@ -56,7 +56,7 @@ const CategoriesModule: React.FC = () => {
 
   const handleCreateCategory = async (categoryData: Omit<Category, 'id' | 'created_at' | 'updated_at'>) => {
     try {
-      const response = await fetch(`${apiUrl}/transaction-categories`, {
+      const response = await fetch(`${apiUrl}/financial/transaction-categories`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(categoryData)
@@ -75,7 +75,7 @@ const CategoriesModule: React.FC = () => {
     if (!selectedCategory) return;
     
     try {
-      const response = await fetch(`${apiUrl}/transaction-categories?id=${selectedCategory.id}`, {
+      const response = await fetch(`${apiUrl}/financial/transaction-categories?id=${selectedCategory.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(categoryData)
@@ -95,7 +95,7 @@ const CategoriesModule: React.FC = () => {
     if (!confirm('¿Estás seguro de que quieres desactivar esta categoría?')) return;
     
     try {
-      const response = await fetch(`${apiUrl}/transaction-categories?id=${categoryId}`, {
+      const response = await fetch(`${apiUrl}/financial/transaction-categories?id=${categoryId}`, {
         method: 'DELETE'
       });
 

@@ -55,7 +55,7 @@ const TeachersModule: React.FC = () => {
       
       const token = localStorage.getItem('authToken');
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
-      const response = await fetch(`${apiUrl}/teachers?${params}`, {
+      const response = await fetch(`${apiUrl}/core/teachers?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -83,7 +83,7 @@ const TeachersModule: React.FC = () => {
     try {
       const token = localStorage.getItem('authToken');
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
-      const response = await fetch(`${apiUrl}/teachers?id=${teacherId}`, {
+      const response = await fetch(`${apiUrl}/core/teachers?id=${teacherId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -105,7 +105,7 @@ const TeachersModule: React.FC = () => {
     try {
       const token = localStorage.getItem('authToken');
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
-      const response = await fetch(`${apiUrl}/teachers`, {
+      const response = await fetch(`${apiUrl}/core/teachers`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -134,7 +134,7 @@ const TeachersModule: React.FC = () => {
     try {
       const token = localStorage.getItem('authToken');
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
-      const response = await fetch(`${apiUrl}/teachers?id=${selectedTeacher.id}`, {
+      const response = await fetch(`${apiUrl}/core/teachers?id=${selectedTeacher.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
