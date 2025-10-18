@@ -158,7 +158,7 @@ const PaymentTrackingModule: React.FC = () => {
 
       if (cashBoxesRes.ok) {
         const cashBoxesData = await cashBoxesRes.json();
-        setCashBoxes(cashBoxesData.data || []);
+        setCashBoxes(cashBoxesData || []);
       }
     } catch (error) {
       console.error('Error al cargar datos:', error);
