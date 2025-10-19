@@ -44,7 +44,10 @@ async function handleGet(req: VercelRequest, res: VercelResponse, supabase: any)
 
   let query = supabase
     .from('transactions')
-    .select('*')
+    .select(`
+      *,
+      cash_boxes!left(name, box_type, payment_method, currency)
+    `)
     .order('transaction_date', { ascending: false });
 
   // Filtros
