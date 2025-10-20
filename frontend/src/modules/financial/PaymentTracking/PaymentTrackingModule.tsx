@@ -93,13 +93,13 @@ const PaymentTrackingModule: React.FC = () => {
       const token = localStorage.getItem('token');
 
       const [paymentsRes, monthlyRes, familiesRes, studentsRes, commitmentsRes, cashBoxesRes] = await Promise.all([
-        fetch(`${apiUrl}/financial/payments?year=${selectedYear}&month=${selectedMonth}`, {
+        fetch(`${apiUrl}/financial/payments`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         }),
-        fetch(`${apiUrl}/financial/monthly-payment-status?year=${selectedYear}&month=${selectedMonth}${selectedStatus ? `&status=${selectedStatus}` : ''}`, {
+        fetch(`${apiUrl}/financial/monthly-payment-status${selectedStatus ? `?status=${selectedStatus}` : ''}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
