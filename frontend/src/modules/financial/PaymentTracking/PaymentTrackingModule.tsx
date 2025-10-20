@@ -24,19 +24,6 @@ interface Payment {
   reference_number?: string;
   month_paid?: string;
   notes?: string;
-  families: {
-    family_name: string;
-    contact_email: string;
-  };
-  students: {
-    first_name: string;
-    last_name: string;
-    grade: string;
-  };
-  fraternal_commitments: {
-    academic_year: string;
-    agreed_amount: number;
-  };
 }
 
 interface MonthlyPaymentStatus {
@@ -51,19 +38,6 @@ interface MonthlyPaymentStatus {
   status: 'pendiente' | 'parcial' | 'completo' | 'excedido';
   due_date?: string;
   notes?: string;
-  families: {
-    family_name: string;
-    contact_email: string;
-  };
-  students: {
-    first_name: string;
-    last_name: string;
-    grade: string;
-  };
-  fraternal_commitments: {
-    academic_year: string;
-    agreed_amount: number;
-  };
 }
 
 const PaymentTrackingModule: React.FC = () => {
@@ -192,16 +166,12 @@ const PaymentTrackingModule: React.FC = () => {
 
   // Filtrar datos según búsqueda
   const filteredPayments = payments.filter(payment => 
-    payment.families.family_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    payment.students.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    payment.students.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    payment.reference_number?.toLowerCase().includes(searchTerm.toLowerCase())
+    payment.reference_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    payment.notes?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const filteredMonthlyStatus = monthlyStatus.filter(status => 
-    status.families.family_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    status.students.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    status.students.last_name.toLowerCase().includes(searchTerm.toLowerCase())
+    status.notes?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getStatusIcon = (status: string) => {
@@ -438,11 +408,11 @@ const PaymentTrackingModule: React.FC = () => {
                     {filteredPayments.map((payment) => (
                       <tr key={payment.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {payment.families.family_name}
+                          {payment.family_id}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {payment.students.first_name} {payment.students.last_name}
-                          <div className="text-xs text-gray-500">{payment.students.grade}</div>
+                          {payment.student_id}
+                          <div className="text-xs text-gray-500">Estudiante</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
                           ${payment.amount.toLocaleString()}
@@ -502,11 +472,11 @@ const PaymentTrackingModule: React.FC = () => {
                     {filteredMonthlyStatus.map((status) => (
                       <tr key={status.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {status.families.family_name}
+                          {status.family_id}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {status.students.first_name} {status.students.last_name}
-                          <div className="text-xs text-gray-500">{status.students.grade}</div>
+                          {status.student_id}
+                          <div className="text-xs text-gray-500">Estudiante</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {new Date(status.year, status.month - 1).toLocaleDateString('es', { month: 'short', year: 'numeric' })}
