@@ -182,6 +182,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (month_paid && commitment_id) {
         const [year, month] = month_paid.split('-');
         await updateMonthlyPaymentStatus(supabase, family_id, student_id, commitment_id, parseInt(year), parseInt(month));
+      } else {
+        // Si no hay month_paid, usar la fecha de pago para determinar el mes
+        const paymentDate = new Date(payment_date);
+        const year = paymentDate.getFullYear();
+        const month = paymentDate.getMonth() + 1;
+        
+        if (commitment_id) {
+          await updateMonthlyPaymentStatus(supabase, family_id, student_id, commitment_id, year, month);
+        }
       }
 
       return res.status(201).json({
