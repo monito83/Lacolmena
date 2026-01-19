@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Users, 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
-  Eye, 
+import {
+  Users,
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  Eye,
   Heart,
   Phone,
   Mail,
@@ -56,10 +56,10 @@ const FamiliesModule: React.FC = () => {
       const params = new URLSearchParams();
       if (searchTerm) params.append('search', searchTerm);
       if (showActiveOnly) params.append('is_active', 'true');
-      
+
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`${apiUrl}/core/families?${params}`, {
+      const response = await fetch(`${apiUrl}/families?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -67,8 +67,16 @@ const FamiliesModule: React.FC = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setFamilies(data || []);
+        const responseData = await response.json();
+        // La API devuelve { success: true, data: [...] } o { message: '...', data: [...] }
+        const familiesData = responseData.data || responseData;
+
+        if (Array.isArray(familiesData)) {
+          setFamilies(familiesData);
+        } else {
+          console.error('La estructura de datos de familias no es válida:', responseData);
+          setFamilies([]);
+        }
       } else {
         console.error('Error al cargar familias');
       }
@@ -87,7 +95,7 @@ const FamiliesModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`${apiUrl}/core/families?id=${familyId}`, {
+      const response = await fetch(`${apiUrl}/families?id=${familyId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -132,7 +140,7 @@ const FamiliesModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`${apiUrl}/core/families`, {
+      const response = await fetch(`${apiUrl}/families`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -158,7 +166,7 @@ const FamiliesModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`${apiUrl}/core/families?id=${selectedFamily.id}`, {
+      const response = await fetch(`${apiUrl}/families?id=${selectedFamily.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -224,7 +232,7 @@ const FamiliesModule: React.FC = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text focus:ring-purple-400"
-                style={{ 
+                style={{
                   backgroundColor: 'oklch(0.99 0.01 270)',
                   borderColor: 'oklch(0.85 0.05 270)'
                 }}
@@ -272,7 +280,7 @@ const FamiliesModule: React.FC = () => {
               <div
                 key={family.id}
                 className="p-6 rounded-xl border transition-colors hover:shadow-md"
-                style={{ 
+                style={{
                   backgroundColor: 'oklch(0.99 0.01 270)',
                   borderColor: 'oklch(0.90 0.05 270)'
                 }}
@@ -281,9 +289,9 @@ const FamiliesModule: React.FC = () => {
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-3">
                       <h3 className="text-xl waldorf-title">{family.family_name}</h3>
-                      <span 
+                      <span
                         className="px-2 py-1 rounded-full text-xs font-medium"
-                        style={{ 
+                        style={{
                           backgroundColor: family.is_active ? 'oklch(0.92 0.05 120)' : 'oklch(0.92 0.05 30)',
                           color: getStatusColor(family.is_active)
                         }}
@@ -344,7 +352,12 @@ const FamiliesModule: React.FC = () => {
                         <Users className="h-5 w-5" style={{ color: 'oklch(0.60 0.10 166.78)' }} />
                         <div>
                           <p className="text-lg waldorf-title">{getTotalStudents(family)}</p>
-                          <p className="text-xs waldorf-body-text">Estudiantes</p>
+                          <p className="text-xs waldorf-body-text">
+                            {family.students && family.students.length > 0
+                              ? family.students.filter(s => s.is_active).map(s => s.first_name).join(', ')
+                              : 'Estudiantes'
+                            }
+                          </p>
                         </div>
                       </div>
 

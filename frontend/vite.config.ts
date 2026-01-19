@@ -5,11 +5,18 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 9000,
+    port: 3500,
     strictPort: true,
     open: false,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      }
+    },
     headers: {
-      'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: ws: wss:; style-src-elem 'self' 'unsafe-inline' https:; connect-src 'self' http://localhost:3001 ws: wss:;"
+      'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: ws: wss:; style-src-elem 'self' 'unsafe-inline' https:; connect-src 'self' http://localhost:3001 http://localhost:3500 ws: wss:;"
     }
   },
   build: {

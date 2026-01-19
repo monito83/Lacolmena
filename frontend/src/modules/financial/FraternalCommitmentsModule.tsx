@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Plus, 
-  Edit, 
-  Eye, 
-  Search, 
+import {
+  Plus,
+  Edit,
+  Eye,
+  Search,
   Calendar,
   DollarSign,
   Heart
@@ -52,15 +52,15 @@ const FraternalCommitmentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      
+
       const [familiesRes, studentsRes] = await Promise.all([
-        fetch(`${apiUrl}/core/families`, {
+        fetch(`${apiUrl}/families`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         }),
-        fetch(`${apiUrl}/core/students`, {
+        fetch(`${apiUrl}/students`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -252,7 +252,7 @@ const FraternalCommitmentsModule: React.FC = () => {
                       {getStatusText(commitment.status)}
                     </span>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div>
                       <p className="text-sm text-gray-500">Estudiante</p>
@@ -263,12 +263,12 @@ const FraternalCommitmentsModule: React.FC = () => {
                         <p className="text-xs text-gray-400">{commitment.students.grade}</p>
                       )}
                     </div>
-                    
+
                     <div>
                       <p className="text-sm text-gray-500">Año Académico</p>
                       <p className="font-medium">{commitment.academic_year}</p>
                     </div>
-                    
+
                     <div>
                       <p className="text-sm text-gray-500">Monto Acordado</p>
                       <p className="font-medium text-green-600">

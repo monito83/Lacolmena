@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { supabase } from '../config/supabase';
 import { logger } from '../utils/logger';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 // Extender la interfaz Request para incluir user
 declare global {
@@ -19,8 +22,8 @@ declare global {
 }
 
 export const authenticateToken = async (
-  req: Request, 
-  res: Response, 
+  req: Request,
+  res: Response,
   next: NextFunction
 ) => {
   try {
@@ -28,14 +31,14 @@ export const authenticateToken = async (
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
     if (!token) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: 'Token de acceso requerido',
         message: 'Debes proporcionar un token de autenticación'
       });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
-    
+
     // Verificar que el usuario aún existe y está activo
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
@@ -51,7 +54,7 @@ export const authenticateToken = async (
     });
 
     if (!user || !user.isActive) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: 'Usuario no válido',
         message: 'El token no corresponde a un usuario activo'
       });
@@ -69,22 +72,22 @@ export const authenticateToken = async (
     next();
   } catch (error) {
     logger.error('Error en autenticación:', error);
-    
+
     if (error instanceof jwt.JsonWebTokenError) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: 'Token inválido',
         message: 'El token proporcionado no es válido'
       });
     }
-    
+
     if (error instanceof jwt.TokenExpiredError) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: 'Token expirado',
         message: 'El token ha expirado, inicia sesión nuevamente'
       });
     }
 
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Error interno del servidor',
       message: 'Error al verificar la autenticación'
     });
@@ -94,14 +97,14 @@ export const authenticateToken = async (
 export const requireRole = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: 'No autenticado',
         message: 'Debes estar autenticado para acceder a este recurso'
       });
     }
 
     if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ 
+      return res.status(403).json({
         error: 'Acceso denegado',
         message: 'No tienes permisos para acceder a este recurso'
       });
@@ -117,13 +120,13 @@ export const requireFamily = requireRole(['ADMIN', 'MAESTRO', 'FAMILIA']);
 
 // Middleware para verificar que el usuario puede acceder a datos de su familia
 export const requireFamilyAccess = async (
-  req: Request, 
-  res: Response, 
+  req: Request,
+  res: Response,
   next: NextFunction
 ) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: 'No autenticado',
         message: 'Debes estar autenticado'
       });
@@ -137,16 +140,16 @@ export const requireFamilyAccess = async (
     // Las familias solo pueden acceder a sus propios datos
     if (req.user.role === 'FAMILIA') {
       const familyId = req.params.familyId || req.body.familyId;
-      
+
       if (!familyId) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           error: 'ID de familia requerido',
           message: 'Debes proporcionar un ID de familia'
         });
       }
 
       if (familyId !== req.user.familyId) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           error: 'Acceso denegado',
           message: 'Solo puedes acceder a los datos de tu familia'
         });
@@ -156,7 +159,7 @@ export const requireFamilyAccess = async (
     return next();
   } catch (error) {
     logger.error('Error en verificación de acceso familiar:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Error interno del servidor',
       message: 'Error al verificar permisos de acceso'
     });
@@ -165,13 +168,13 @@ export const requireFamilyAccess = async (
 
 // Middleware para verificar que el maestro puede acceder a sus estudiantes
 export const requireTeacherAccess = async (
-  req: Request, 
-  res: Response, 
+  req: Request,
+  res: Response,
   next: NextFunction
 ) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         error: 'No autenticado',
         message: 'Debes estar autenticado'
       });
@@ -185,7 +188,7 @@ export const requireTeacherAccess = async (
     // Los maestros solo pueden acceder a sus estudiantes
     if (req.user.role === 'MAESTRO' && req.user.teacherId) {
       const studentId = req.params.studentId || req.body.studentId;
-      
+
       if (studentId) {
         const student = await prisma.student.findFirst({
           where: {
@@ -201,7 +204,7 @@ export const requireTeacherAccess = async (
         });
 
         if (!student) {
-          return res.status(403).json({ 
+          return res.status(403).json({
             error: 'Acceso denegado',
             message: 'Solo puedes acceder a los estudiantes de tus clases'
           });
@@ -212,7 +215,7 @@ export const requireTeacherAccess = async (
     return next();
   } catch (error) {
     logger.error('Error en verificación de acceso de maestro:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Error interno del servidor',
       message: 'Error al verificar permisos de acceso'
     });

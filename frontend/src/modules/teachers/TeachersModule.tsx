@@ -52,10 +52,10 @@ const TeachersModule: React.FC = () => {
       const params = new URLSearchParams();
       if (searchTerm) params.append('search', searchTerm);
       if (showActiveOnly) params.append('is_active', 'true');
-      
+
       const token = localStorage.getItem('authToken');
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
-      const response = await fetch(`${apiUrl}/core/teachers?${params}`, {
+      const response = await fetch(`${apiUrl}/teachers?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -63,8 +63,15 @@ const TeachersModule: React.FC = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setTeachers(data || []);
+        const responseData = await response.json();
+        const teachersData = responseData.data || responseData;
+
+        if (Array.isArray(teachersData)) {
+          setTeachers(teachersData);
+        } else {
+          console.error('La estructura de datos de maestros no es válida:', responseData);
+          setTeachers([]);
+        }
       } else {
         console.error('Error al cargar maestros');
       }
@@ -83,7 +90,7 @@ const TeachersModule: React.FC = () => {
     try {
       const token = localStorage.getItem('authToken');
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
-      const response = await fetch(`${apiUrl}/core/teachers?id=${teacherId}`, {
+      const response = await fetch(`${apiUrl}/teachers?id=${teacherId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -105,7 +112,7 @@ const TeachersModule: React.FC = () => {
     try {
       const token = localStorage.getItem('authToken');
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
-      const response = await fetch(`${apiUrl}/core/teachers`, {
+      const response = await fetch(`${apiUrl}/teachers`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -134,7 +141,7 @@ const TeachersModule: React.FC = () => {
     try {
       const token = localStorage.getItem('authToken');
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
-      const response = await fetch(`${apiUrl}/core/teachers?id=${selectedTeacher.id}`, {
+      const response = await fetch(`${apiUrl}/teachers?id=${selectedTeacher.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -234,7 +241,7 @@ const TeachersModule: React.FC = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border rounded-lg waldorf-body-text focus:ring-2 focus:ring-purple-400 focus:border-transparent"
-                style={{ 
+                style={{
                   backgroundColor: 'oklch(0.99 0.01 270)',
                   borderColor: 'oklch(0.90 0.05 270)'
                 }}
@@ -277,7 +284,7 @@ const TeachersModule: React.FC = () => {
               <div
                 key={teacher.id}
                 className="p-6 rounded-xl border transition-colors hover:shadow-md"
-                style={{ 
+                style={{
                   backgroundColor: 'oklch(0.99 0.01 270)',
                   borderColor: 'oklch(0.90 0.05 270)'
                 }}
@@ -287,9 +294,9 @@ const TeachersModule: React.FC = () => {
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
                       <h3 className="text-xl waldorf-title">{teacher.first_name} {teacher.last_name}</h3>
-                      <span 
+                      <span
                         className="px-2 py-1 rounded-full text-xs font-medium"
-                        style={{ 
+                        style={{
                           backgroundColor: teacher.is_active ? 'oklch(0.92 0.05 120)' : 'oklch(0.92 0.05 30)',
                           color: getStatusColor(teacher.is_active)
                         }}
@@ -297,12 +304,12 @@ const TeachersModule: React.FC = () => {
                         {getStatusText(teacher.is_active)}
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center space-x-2 mb-3">
                       <GraduationCap className="h-4 w-4" style={{ color: 'oklch(0.60 0.10 270)' }} />
                       <span className="waldorf-body-text text-sm">
-                        {Array.isArray(teacher.specializations) 
-                          ? teacher.specializations.join(', ') 
+                        {Array.isArray(teacher.specializations)
+                          ? teacher.specializations.join(', ')
                           : teacher.specializations || 'Sin especialización'}
                       </span>
                     </div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  CreditCard, 
-  Plus, 
-  Search, 
+import {
+  CreditCard,
+  Plus,
+  Search,
   Calendar,
   DollarSign,
   Users,
@@ -79,13 +79,13 @@ const PaymentTrackingModule: React.FC = () => {
             'Content-Type': 'application/json'
           }
         }),
-        fetch(`${apiUrl}/core/families?is_active=true`, {
+        fetch(`${apiUrl}/families?is_active=true`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         }),
-        fetch(`${apiUrl}/core/students?is_active=true`, {
+        fetch(`${apiUrl}/students?is_active=true`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -146,7 +146,7 @@ const PaymentTrackingModule: React.FC = () => {
     const totalPayments = payments.reduce((sum, payment) => sum + payment.amount, 0);
     const totalExpected = monthlyStatus.reduce((sum, status) => sum + status.expected_amount, 0);
     const totalPaid = monthlyStatus.reduce((sum, status) => sum + status.paid_amount, 0);
-    
+
     const pendingCount = monthlyStatus.filter(s => s.status === 'pendiente').length;
     const partialCount = monthlyStatus.filter(s => s.status === 'parcial').length;
     const completeCount = monthlyStatus.filter(s => s.status === 'completo').length;
@@ -165,12 +165,12 @@ const PaymentTrackingModule: React.FC = () => {
   const stats = getStatistics();
 
   // Filtrar datos según búsqueda
-  const filteredPayments = payments.filter(payment => 
+  const filteredPayments = payments.filter(payment =>
     payment.reference_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     payment.notes?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredMonthlyStatus = monthlyStatus.filter(status => 
+  const filteredMonthlyStatus = monthlyStatus.filter(status =>
     status.notes?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -239,7 +239,7 @@ const PaymentTrackingModule: React.FC = () => {
           <CreditCard className="w-8 h-8 text-purple-600" />
           <h1 className="text-2xl font-bold text-gray-900">Seguimiento de Pagos</h1>
         </div>
-        <button 
+        <button
           onClick={() => setShowPaymentForm(true)}
           className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center space-x-2"
         >
@@ -306,7 +306,7 @@ const PaymentTrackingModule: React.FC = () => {
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
             </div>
-            
+
             <div className="flex space-x-2">
               <select
                 value={selectedYear}
@@ -316,7 +316,7 @@ const PaymentTrackingModule: React.FC = () => {
                 <option value="2024">2024</option>
                 <option value="2025">2025</option>
               </select>
-              
+
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
@@ -328,7 +328,7 @@ const PaymentTrackingModule: React.FC = () => {
                   </option>
                 ))}
               </select>
-              
+
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
@@ -347,21 +347,19 @@ const PaymentTrackingModule: React.FC = () => {
           <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
             <button
               onClick={() => setActiveTab('payments')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'payments'
-                  ? 'bg-white text-purple-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'payments'
+                ? 'bg-white text-purple-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+                }`}
             >
               Pagos Registrados
             </button>
             <button
               onClick={() => setActiveTab('monthly')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'monthly'
-                  ? 'bg-white text-purple-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === 'monthly'
+                ? 'bg-white text-purple-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+                }`}
             >
               Estado Mensual
             </button>

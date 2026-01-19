@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Users, 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
-  Eye, 
+import {
+  Users,
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  Eye,
   Calendar,
   User,
   Heart,
@@ -72,10 +72,10 @@ const StudentsModule: React.FC = () => {
       if (searchTerm) params.append('search', searchTerm);
       if (selectedFamily) params.append('family_id', selectedFamily);
       if (showActiveOnly) params.append('is_active', 'true');
-      
+
       const token = localStorage.getItem('token');
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
-      const response = await fetch(`${apiUrl}/core/students?${params}`, {
+      const response = await fetch(`${apiUrl}/students?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -99,7 +99,7 @@ const StudentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/core/families`, {
+      const response = await fetch(`${apiUrl}/families`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -123,7 +123,7 @@ const StudentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/core/students?id=${studentId}`, {
+      const response = await fetch(`${apiUrl}/students?id=${studentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -145,7 +145,7 @@ const StudentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/core/students`, {
+      const response = await fetch(`${apiUrl}/students`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -171,7 +171,7 @@ const StudentsModule: React.FC = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '/api';
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/core/students?id=${selectedStudent.id}`, {
+      const response = await fetch(`${apiUrl}/students?id=${selectedStudent.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -227,11 +227,11 @@ const StudentsModule: React.FC = () => {
     const birth = new Date(birthDate);
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
-    
+
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
       age--;
     }
-    
+
     return age;
   };
 
@@ -279,14 +279,14 @@ const StudentsModule: React.FC = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text focus:ring-purple-400"
-                style={{ 
+                style={{
                   backgroundColor: 'oklch(0.99 0.01 270)',
                   borderColor: 'oklch(0.85 0.05 270)'
                 }}
               />
             </div>
           </div>
-          
+
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Filtro por familia */}
             <div className="min-w-0 flex-1">
@@ -294,7 +294,7 @@ const StudentsModule: React.FC = () => {
                 value={selectedFamily}
                 onChange={(e) => setSelectedFamily(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 waldorf-body-text focus:ring-purple-400"
-                style={{ 
+                style={{
                   backgroundColor: 'oklch(0.99 0.01 270)',
                   borderColor: 'oklch(0.85 0.05 270)'
                 }}
@@ -353,7 +353,7 @@ const StudentsModule: React.FC = () => {
                 <div
                   key={student.id}
                   className="p-6 rounded-xl border transition-colors hover:shadow-md"
-                  style={{ 
+                  style={{
                     backgroundColor: 'oklch(0.99 0.01 270)',
                     borderColor: 'oklch(0.90 0.05 270)'
                   }}
@@ -364,9 +364,9 @@ const StudentsModule: React.FC = () => {
                         <h3 className="text-xl waldorf-title">
                           {student.first_name} {student.last_name}
                         </h3>
-                        <span 
+                        <span
                           className="px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1"
-                          style={{ 
+                          style={{
                             backgroundColor: student.is_active ? 'oklch(0.92 0.05 120)' : 'oklch(0.92 0.05 30)',
                             color: getStatusColor(student.is_active)
                           }}
