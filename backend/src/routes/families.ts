@@ -28,7 +28,7 @@ router.get('/', asyncHandler(async (req, res) => {
 
     let query = supabase
       .from('families')
-      .select('*, students(id, first_name, last_name, is_active)')
+      .select('*')
       .order('family_name', { ascending: true });
 
     // Filtros
